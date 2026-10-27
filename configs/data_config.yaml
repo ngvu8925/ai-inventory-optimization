@@ -1,0 +1,30 @@
+# Cấu hình dữ liệu và quy tắc chọn tập con SKU (Phase 2)
+# Mọi quy tắc chọn SKU chỉ sử dụng dữ liệu trong giai đoạn train (d_1..d_1577)
+
+store_id: "CA_1"
+categories:
+  - "FOODS"
+  - "HOBBIES"
+  - "HOUSEHOLD"
+
+num_skus_per_category: 20
+total_skus: 60
+
+timeline:
+  first_day: 1
+  last_train_day: 1577         # d_1577 (2015-05-24)
+  first_holdout_day: 1578      # d_1578 (2015-05-25)
+  last_holdout_day: 1941       # d_1941 (2016-05-22)
+  holdout_days: 364            # 52 tuần
+
+sku_selection:
+  # Điều kiện ứng viên: Chỉ xét SKU tại CA_1 có mặt và có giá từ tuần đầu tiên
+  initial_wm_yr_wk: 11101
+  # Tiêu chí xếp hạng trong từng ngành hàng: Tổng doanh số trong d_1..d_1577
+  ranking_metric: "total_sales_train"
+  # Tiêu chí phân định khi trùng giá trị (tie-breaker): Mã item_id tăng dần
+  tie_breaker: "item_id"
+  # Công thức chọn 20 phân vị đều:
+  # Sắp xếp N ứng viên tăng dần theo (total_sales_train, item_id)
+  # index[i] = int(round(i * (N - 1) / 19.0)) với i = 0..19
+  quantile_method: "evenly_spaced_indices"

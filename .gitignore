@@ -1,0 +1,13 @@
+# M5 raw data (downloaded manually from Kaggle)
+/data/raw/*
+!/data/raw/.gitkeep
+
+# Processed data
+/data/processed/*
+!/data/processed/.gitkeep
+
+# Python & Environment
+/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -1,0 +1,7 @@
+# Giá trị minh họa để khởi tạo cấu hình; TODO: nhóm cần thống nhất và biện minh.
+# Đây không phải số liệu thực tế từ Walmart hoặc Kaggle.
+lead_time_days: 7  # TODO: giả định tạm, ngày
+ordering_cost: 1.0  # TODO: chi phí mỗi lần đặt, đơn vị tiền tệ chưa chốt
+holding_cost_per_unit_per_day: 0.01  # TODO: chi phí lưu kho / đơn vị / ngày
+shortage_cost_per_unit: 5.0  # TODO: chi phí thiếu hàng / đơn vị
+service_level: 0.95  # TODO: mục tiêu tạm; cần xác nhận và chuyển đổi sang z khi triển khai SS
