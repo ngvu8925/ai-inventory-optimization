@@ -6,8 +6,16 @@
 /data/processed/*
 !/data/processed/.gitkeep
 
+# Results predictions
+/results/predictions/*
+!/results/predictions/.gitkeep
+
 # Python & Environment
 /.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
 __pycache__/
 *.pyc
 .pytest_cache/
