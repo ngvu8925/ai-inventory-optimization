@@ -63,11 +63,11 @@ Trong quá trình tiền xử lý, toàn bộ 3.049 SKU tại cửa hàng `CA_1`
 - **Giá trị thiếu (Missing values)**:
   - `sales`: **0 dòng thiếu** (100% đầy đủ).
   - `sell_price`: **0 dòng thiếu** (100% đầy đủ giá liên tục cho cả 60 SKU).
-- **Tỷ lệ ngày bán bằng 0 (% Zero-demand) trên tập train $d_1 \dots d_{1577}$**:
-  - Toàn bộ 60 SKU: **54.22%** (toàn bộ 1.941 ngày là **54.08%**).
-  - Ngành hàng `FOODS` (20 SKU): **43.72%** (SKU thấp nhất: 2.16%, SKU cao nhất: 95.81%).
-  - Ngành hàng `HOBBIES` (20 SKU): **58.04%** (SKU thấp nhất: 22.32%, SKU cao nhất: 94.04%).
-  - Ngành hàng `HOUSEHOLD` (20 SKU): **60.90%** (SKU thấp nhất: 7.93%, SKU cao nhất: 94.48%).
+- **Tỷ lệ ngày bán bằng 0 (Zero-demand ratio) trên tập train $d_1 \dots d_{1577}$ (dạng $0-1$)**:
+  - Toàn bộ 60 SKU: **0.5422** (54.22%).
+  - Ngành hàng `FOODS` (20 SKU): **0.4372** (SKU thấp nhất: 0.0216, SKU cao nhất: 0.9581).
+  - Ngành hàng `HOBBIES` (20 SKU): **0.5804** (SKU thấp nhất: 0.2232, SKU cao nhất: 0.9404).
+  - Ngành hàng `HOUSEHOLD` (20 SKU): **0.6090** (SKU thấp nhất: 0.0793, SKU cao nhất: 0.9448).
 - **Thống kê doanh số và giá bán (tập train)**:
   - Doanh số bán trung bình: **2.83 đơn vị/ngày** (độ lệch chuẩn 12.01; trung vị = 0; giá trị lớn nhất 599).
   - Giá bán trung bình: **$4.06** (nhỏ nhất $0.42, lớn nhất $15.28).

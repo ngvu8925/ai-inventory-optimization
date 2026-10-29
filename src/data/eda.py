@@ -114,7 +114,7 @@ def run_eda(
     
     # --- Bieu do 3: Ty le ngay ban bang 0 (% zero-demand) tung SKU ---
     sku_stats = train_df.groupby(["cat_id", "item_id"]).agg(
-        zero_ratio=("sales", lambda s: (s == 0).mean() * 100),
+        zero_ratio=("sales", lambda s: (s == 0).mean()),
         mean_sales=("sales", "mean"),
         total_sales=("sales", "sum"),
     ).reset_index()
@@ -126,11 +126,11 @@ def run_eda(
     bar_colors = [cat_colors.get(c, "gray") for c in sku_stats_sorted["cat_id"]]
     
     bars = ax.bar(range(len(sku_stats_sorted)), sku_stats_sorted["zero_ratio"], color=bar_colors, width=0.8)
-    ax.set_title("Ty le ngay khong co luot ban nao (% Zero Sales) cua 60 SKU (d_1..d_1577)")
-    ax.set_ylabel("Ty le ngay sales = 0 (%)")
+    ax.set_title("Ty le ngay khong co luot ban nao (Zero Sales Ratio) cua 60 SKU (d_1..d_1577)")
+    ax.set_ylabel("Ty le ngay sales = 0 (0.0 - 1.0)")
     ax.set_xlabel("60 SKU (sap xep tu it so 0 nhat den nhieu so 0 nhat)")
-    ax.set_ylim(0, 100)
-    ax.axhline(50, color="red", linestyle="--", alpha=0.6, label="Moc 50% ngay khong co ban")
+    ax.set_ylim(0, 1.0)
+    ax.axhline(0.5, color="red", linestyle="--", alpha=0.6, label="Moc 0.5 (50% ngay khong co ban)")
     
     # Chu thich nganh hang
     from matplotlib.patches import Patch
@@ -138,7 +138,7 @@ def run_eda(
         Patch(facecolor="forestgreen", label="FOODS (20 SKU)"),
         Patch(facecolor="royalblue", label="HOBBIES (20 SKU)"),
         Patch(facecolor="darkorange", label="HOUSEHOLD (20 SKU)"),
-        plt.Line2D([0], [0], color="red", linestyle="--", label="Nguong 50%"),
+        plt.Line2D([0], [0], color="red", linestyle="--", label="Nguong 0.5"),
     ]
     ax.legend(handles=legend_elements, loc="upper left")
     
@@ -202,15 +202,12 @@ def run_eda(
     plt.close()
     print(f"Luu bieu do 5: {fig5_path}")
     
-    # Thong ke so lieu de cap nhat DATA_CARD
+    # Thong ke so lieu chi tren tap train (d_1..d_1577), thong nhat ty le dang 0-1
     summary = {
         "train_rows": len(train_df),
-        "total_rows": len(df),
         "start_date": str(train_df["date"].min().date()),
         "end_date": str(train_df["date"].max().date()),
-        "eval_end_date": str(df["date"].max().date()),
         "overall_zero_ratio_train": float((train_df["sales"] == 0).mean()),
-        "overall_zero_ratio_eval": float((df["sales"] == 0).mean()),
         "foods_zero_ratio_train": float((train_df[train_df["cat_id"] == "FOODS"]["sales"] == 0).mean()),
         "hobbies_zero_ratio_train": float((train_df[train_df["cat_id"] == "HOBBIES"]["sales"] == 0).mean()),
         "household_zero_ratio_train": float((train_df[train_df["cat_id"] == "HOUSEHOLD"]["sales"] == 0).mean()),

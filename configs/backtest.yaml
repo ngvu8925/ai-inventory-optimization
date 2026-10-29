@@ -1,0 +1,17 @@
+# Cau hinh quy trinh backtest rolling-origin expanding window (Phase 3)
+# Toan bo 13 fold duoc danh gia tren tap hold-out (d_1578..d_1941)
+
+horizon: 28                 # Do dai du bao moi fold (ngay)
+num_folds: 13               # Tong so fold rolling-origin
+initial_origin: 1577        # Diem cat dau tien: d_1577 (2015-05-24)
+step_size: 28               # Buoc nhay origin qua moi fold
+seed: 42                    # Co dinh seed de dam bao reproducible
+
+# Cong thuc origin: o_k = 1577 + 28 * k voi k = 0..12
+# Fold k train tren d_1..d_{o_k}, du bao d_{o_k+1}..d_{o_k+28}
+# Fold 12: o_12 = 1913, du bao d_1914..d_1941 (ket thuc dung ngay cuoi cua evaluation)
+
+zero_demand_tiers:
+  smooth: [0.0, 0.33]       # Ty le ngay sales = 0 duoi 33%
+  medium: [0.33, 0.66]      # Ty le ngay sales = 0 tu 33% den 66%
+  intermittent: [0.66, 1.0] # Ty le ngay sales = 0 tren 66%
