@@ -1,13 +1,16 @@
 model,zero_tier,WAPE,MASE,MAE,RMSE,Bias,Count
+Chronos,intermittent,1.0224,0.7685,0.3004,0.7197,-0.2781,7280
 MovingAverage,intermittent,1.3918,1.0952,0.4089,0.6436,-0.0058,7280
 LightGBM,intermittent,1.4269,1.1514,0.4193,0.6355,0.0141,7280
 SeasonalNaive,intermittent,1.4647,1.1192,0.4304,0.8522,-0.0015,7280
 Naive,intermittent,1.6218,1.2607,0.4765,0.8883,0.06,7280
+Chronos,medium,0.8922,0.7832,1.0312,1.8785,-0.4506,10556
 LightGBM,medium,0.9167,0.8026,1.0595,1.7178,0.0175,10556
 MovingAverage,medium,0.9169,0.8068,1.0597,1.7411,-0.0001,10556
 SeasonalNaive,medium,1.1016,0.9658,1.2733,2.231,-0.0156,10556
 Naive,medium,1.2478,1.0682,1.4423,2.7599,0.2447,10556
 LightGBM,smooth,0.521,0.7991,5.087,10.1119,-0.846,4004
+Chronos,smooth,0.5225,0.82,5.1022,10.6056,-1.3755,4004
 MovingAverage,smooth,0.6364,0.8883,6.2138,12.6459,-0.0322,4004
 SeasonalNaive,smooth,0.657,1.021,6.4148,12.535,-0.6526,4004
 Naive,smooth,0.7305,1.1001,7.1331,14.3682,0.8089,4004

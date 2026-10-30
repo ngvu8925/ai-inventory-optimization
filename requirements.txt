@@ -6,3 +6,5 @@ pytest
 matplotlib
 jupyter
 lightgbm
+torch
+chronos-forecasting

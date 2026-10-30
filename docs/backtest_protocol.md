@@ -134,40 +134,41 @@ Tại mỗi fold $k \in \{0, 1, \dots, 12\}$ trên tập hold-out:
 
 ---
 
-## 6. So sánh Kết quả Thực nghiệm: LightGBM vs Baselines
+## 6. So sánh Kết quả Thực nghiệm: Baselines vs LightGBM vs Chronos
 
-### Bảng tổng hợp hiệu năng 4 mô hình (Hold-out 13 Folds, 21.840 lượt dự báo)
+### Bảng tổng hợp hiệu năng 5 mô hình (Hold-out 13 Folds, 21.840 lượt dự báo)
 
-| Mô hình | WAPE | MASE | MAE | RMSE | Bias | Số fold thắng MA (WAPE) | Số fold thắng MA (MASE) |
-|---|---|---|---|---|---|---|---|
-| **LightGBM** | **0.6476** | 0.9182 | **1.5845** | **4.5063** | -0.1419 | **11 / 13** | 6 / 13 |
-| **MovingAverage** | 0.7306 | **0.9179** | 1.7877 | 5.5607 | -0.0079 | 0 / 13 | 0 / 13 |
-| **SeasonalNaive** | 0.7908 | 1.0270 | 1.9349 | 5.6084 | -0.1277 | 3 / 13 | 0 / 13 |
-| **Naive** | 0.8843 | 1.1382 | 2.1637 | 6.4648 | +0.2866 | 2 / 13 | 0 / 13 |
+| Mô hình | Loại mô hình | WAPE | MASE | MAE | RMSE | Bias | Số fold thắng MA (WAPE) | Số fold thắng MA (MASE) |
+|---|---|---|---|---|---|---|---|---|
+| **Chronos** | TSFM (Zero-shot) | **0.6269** | **0.7850** | **1.5340** | 4.7433 | -0.5627 | **12 / 13** | **13 / 13** |
+| **LightGBM** | Machine Learning | 0.6476 | 0.9182 | 1.5845 | **4.5063** | -0.1419 | 11 / 13 | 6 / 13 |
+| **MovingAverage** | Baseline (28d) | 0.7306 | 0.9179 | 1.7877 | 5.5607 | -0.0079 | 0 / 13 | 0 / 13 |
+| **SeasonalNaive** | Baseline (lag 7) | 0.7908 | 1.0270 | 1.9349 | 5.6084 | -0.1277 | 3 / 13 | 0 / 13 |
+| **Naive** | Baseline (lag 1) | 0.8843 | 1.1382 | 2.1637 | 6.4648 | +0.2866 | 2 / 13 | 0 / 13 |
 
-### Phân tích hiện tượng: Vì sao LightGBM vượt trội MovingAverage ở WAPE/MAE/RMSE nhưng MASE gần như tương đương?
+---
 
-Dữ liệu thực nghiệm cho thấy một hiện tượng đáng chú ý: LightGBM giảm WAPE đáng kể so với MovingAverage (**0.6476 vs 0.7306**, tức giảm 8.30 điểm phần trăm), giảm MAE (**1.5845 vs 1.7877**) và RMSE (**4.5063 vs 5.5607**), đồng thời thắng ở **11/13 fold** theo WAPE; tuy nhiên, chỉ số MASE của hai mô hình lại xấp xỉ bằng nhau (**0.9182 vs 0.9179**).
-
-Hiện tượng này được giải thích hoàn toàn bằng toán học và cơ chế gộp chỉ số theo từng nhóm mặt hàng:
-
-#### 1. Sự khác biệt giữa cơ chế Volume-Weighted (WAPE/MAE/RMSE) và Unweighted (MASE)
-- **WAPE** tính theo tổng sai số chia cho tổng doanh số: $\text{WAPE} = \frac{\sum |y - \hat{y}|}{\sum y}$. Do đó, các SKU có lượng bán lớn (`smooth`) đóng góp phần lớn vào cả tử số lẫn mẫu số.
-- Ngược lại, **MASE** được tính bằng trung bình số học unweighted qua từng SKU: mỗi SKU được gán một quyền số bằng nhau ($1/60$), bất kể lượng bán ra là bao nhiêu.
-
-#### 2. Kết quả đo lường thực tế theo từng nhóm nhu cầu (Zero-demand Tier)
+## 7. Phân tích Chi tiết Kết quả Thực nghiệm theo Zero-demand Tier
 
 | Nhóm | Số SKU | Mô hình | WAPE | MASE | MAE | RMSE | Bias |
 |---|---|---|---|---|---|---|---|
 | **`smooth`** | 11 | **LightGBM** | **0.5210** | **0.7991** | **5.0870** | **10.1119** | -0.8460 |
+| | | Chronos | 0.5225 | 0.8200 | 5.1022 | 10.6056 | -1.3755 |
 | | | MovingAverage | 0.6364 | 0.8883 | 6.2138 | 12.6459 | -0.0322 |
-| **`medium`** | 29 | **LightGBM** | **0.9167** | **0.8026** | **1.0595** | **1.7178** | +0.0175 |
+| | | SeasonalNaive | 0.6570 | 1.0210 | 6.4148 | 12.5350 | -0.6526 |
+| | | Naive | 0.7305 | 1.1001 | 7.1331 | 14.3682 | +0.8089 |
+| **`medium`** | 29 | **Chronos** | **0.8922** | **0.7832** | **1.0312** | 1.8785 | -0.4506 |
+| | | LightGBM | 0.9167 | 0.8026 | 1.0595 | **1.7178** | +0.0175 |
 | | | MovingAverage | 0.9169 | 0.8068 | 1.0597 | 1.7411 | -0.0001 |
-| **`intermittent`** | 20 | LightGBM | 1.4269 | 1.1514 | 0.4193 | **0.6355** | +0.0141 |
-| | | **MovingAverage** | **1.3918** | **1.0952** | **0.4089** | 0.6436 | -0.0058 |
+| | | SeasonalNaive | 1.1016 | 0.9658 | 1.2733 | 2.2310 | -0.0156 |
+| | | Naive | 1.2478 | 1.0682 | 1.4423 | 2.7599 | +0.2447 |
+| **`intermittent`** | 20 | **Chronos** | **1.0224** | **0.7685** | **0.3004** | 0.7197 | -0.2781 |
+| | | MovingAverage | 1.3918 | 1.0952 | 0.4089 | 0.6436 | -0.0058 |
+| | | LightGBM | 1.4269 | 1.1514 | 0.4193 | **0.6355** | +0.0141 |
+| | | SeasonalNaive | 1.4647 | 1.1192 | 0.4304 | 0.8522 | -0.0015 |
+| | | Naive | 1.6218 | 1.2607 | 0.4765 | 0.8883 | +0.0600 |
 
-#### 3. Diễn giải số liệu thực tế:
-- **Trên nhóm `smooth` (11 SKU, nhu cầu cao & liên tục)**: LightGBM vượt trội toàn diện so với MovingAverage: WAPE giảm từ 0.6364 xuống 0.5210 (giảm 11.54 điểm %), MASE giảm từ 0.8883 xuống 0.7991, MAE giảm từ 6.2138 xuống 5.0870, RMSE giảm từ 12.6459 xuống 10.1119. Nhóm này đóng góp khối lượng doanh số lớn nhất, kéo toàn bộ WAPE, MAE và RMSE tổng thể của LightGBM giảm mạnh.
-- **Trên nhóm `medium` (29 SKU, nhu cầu trung bình)**: Hai mô hình có hiệu năng gần như tương đương: WAPE đạt 0.9167 vs 0.9169; MASE đạt 0.8026 vs 0.8068.
-- **Trên nhóm `intermittent` (20 SKU, nhu cầu gián đoạn, nhiều ngày bằng 0)**: MovingAverage nhỉnh hơn một chút về WAPE (1.3918 vs 1.4269) và MASE (1.0952 vs 1.1514), trong khi LightGBM có RMSE tốt hơn một chút (0.6355 vs 0.6436).
-- **Tổng hòa khi tính MASE overall**: Do có tới $20 + 29 = 49$ SKU (chiếm $81.7\%$ tổng số SKU) thuộc nhóm medium và intermittent, khi tính trung bình unweighted trên 60 SKU, ưu thế nhẹ của MovingAverage ở 20 SKU intermittent đã bù trừ cho ưu thế mạnh của LightGBM ở 11 SKU smooth. Kết quả là MASE tổng thể của hai mô hình gần như cân bằng nhau ($0.9182$ vs $0.9179$).
+### Nhận xét khoa học:
+1. **Chronos (Zero-shot)**: Thể hiện năng lực khái quát hóa mạnh mẽ vượt bậc trên các chuỗi nhu cầu gián đoạn (`intermittent`), hạ MASE xuống **0.7685** (so với 1.0952 của MovingAverage và 1.1514 của LightGBM). Tuy nhiên, Chronos có xu hướng **under-forecasting** rõ rệt (Bias overall là -0.5627), điều này cần đặc biệt lưu tâm khi tính toán tồn kho an toàn ở Phase 5 để tránh nguy cơ stockout.
+2. **LightGBM**: Duy trì ưu thế tốt nhất ở nhóm hàng bán nhanh (`smooth`) nhờ tận dụng được các biến ngoại sinh (giá bán và lịch sự kiện khuyến mãi SNAP), đạt RMSE thấp nhất trong tất cả các mô hình (**4.5063**). Bias của LightGBM (-0.1419) ổn định hơn nhiều so với Chronos.
+3. **Cơ chế MASE vs WAPE**: Chronos thắng áp đảo về MASE (13/13 fold) vì giải quyết triệt để 20 SKU intermittent chiếm số lượng lớn. Trong khi đó, ở WAPE, mức độ cải thiện của Chronos và LightGBM khá sát nhau (0.6269 so với 0.6476) do WAPE chịu ảnh hưởng chủ đạo từ nhóm hàng `smooth`.

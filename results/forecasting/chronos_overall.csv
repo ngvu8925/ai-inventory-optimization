@@ -1,0 +1,2 @@
+model,WAPE,MASE,MAE,RMSE,Bias,Count
+Chronos,0.6269,0.785,1.534,4.7433,-0.5627,21840
