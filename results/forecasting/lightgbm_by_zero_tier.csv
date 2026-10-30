@@ -1,0 +1,4 @@
+model,zero_tier,WAPE,MASE,MAE,RMSE,Bias,Count
+LightGBM,intermittent,1.4269,1.1514,0.4193,0.6355,0.0141,7280
+LightGBM,medium,0.9167,0.8026,1.0595,1.7178,0.0175,10556
+LightGBM,smooth,0.521,0.7991,5.087,10.1119,-0.846,4004

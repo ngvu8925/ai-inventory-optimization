@@ -32,10 +32,11 @@ class NaiveModel(ForecastModel):
         self,
         horizon: int,
         future_df: Optional[pd.DataFrame] = None,
+        future_context_df: Optional[pd.DataFrame] = None,
     ) -> pd.DataFrame:
+        # future_context_df khong duoc dung boi Baseline (bo qua)
         records = []
         if future_df is not None:
-            # Dung ngay va SKU tu future_df neu co san
             items = future_df["item_id"].unique()
             for item in items:
                 val = self.last_values_.get(item, 0.0)
@@ -88,6 +89,7 @@ class SeasonalNaiveModel(ForecastModel):
         self,
         horizon: int,
         future_df: Optional[pd.DataFrame] = None,
+        future_context_df: Optional[pd.DataFrame] = None,
     ) -> pd.DataFrame:
         records = []
         if future_df is not None:
@@ -140,6 +142,7 @@ class MovingAverageModel(ForecastModel):
         self,
         horizon: int,
         future_df: Optional[pd.DataFrame] = None,
+        future_context_df: Optional[pd.DataFrame] = None,
     ) -> pd.DataFrame:
         records = []
         if future_df is not None:

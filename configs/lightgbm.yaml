@@ -1,0 +1,15 @@
+objective: tweedie
+num_leaves: 31
+learning_rate: 0.05
+min_child_samples: 20
+n_estimators: 500
+seed: 42
+verbose: -1
+n_jobs: -1
+tweedie_variance_power: 1.5
+_tuning_mean_wape: 0.599722
+_tuning_fold_A_wape: 0.532766
+_tuning_fold_B_wape: 0.666677
+_note: Tuned tren d_1..d_1577 voi 2 fold noi bo (origin 1521 va 1549). TUYET DOI khong
+  dung cac fold hold-out de chon tham so. Moi fold dung 20 train origins gan nhat
+  (step=7).

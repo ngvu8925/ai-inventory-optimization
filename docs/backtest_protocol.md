@@ -6,7 +6,7 @@ Tài liệu này mô tả chi tiết phương pháp luận kiểm thử ngược
 
 ## 1. Nguyên tắc thiết kế Backtest
 
-Để mô phỏng chính xác điều kiện triển khai thực tế và ngăn ngừa rò rỉ dữ liệu tương lai (data leakage), nghiên cứu áp dụng kỹ thuật **Rolling-Origin với Expanding Window** (gốc thời gian trượt, cửa sổ huan luyện mở rộng) trên giai đoạn hold-out 364 ngày:
+Để mô phỏng chính xác điều kiện triển khai thực tế và ngăn ngừa rò rỉ dữ liệu tương lai (data leakage), nghiên cứu áp dụng kỹ thuật **Rolling-Origin với Expanding Window** (gốc thời gian trượt, cửa sổ huấn luyện mở rộng) trên giai đoạn hold-out 364 ngày:
 
 - **Phạm vi dữ liệu**: 60 SKU đại diện tại cửa hàng `CA_1` từ tập dữ liệu M5 Walmart.
 - **Tập hold-out**: $d_{1578}$ đến $d_{1941}$ (2015-05-25 đến 2016-05-22, đúng 52 tuần = 364 ngày).
@@ -43,8 +43,18 @@ Theo quy định tại Mục 2 của `AGENTS.md`, **cấm dùng MAPE** vì dữ 
 | **MAE** | $\frac{1}{N} \sum \|y_t - \hat{y}_t\|$ | Sai số tuyệt đối trung bình (đơn vị: sản phẩm/ngày). |
 | **RMSE** | $\sqrt{\frac{1}{N} \sum (y_t - \hat{y}_t)^2}$ | Phạt nặng các sai số lớn; hữu ích khi chi phí thiếu hàng/tồn kho phi tuyến. |
 | **WAPE** | $\frac{\sum \|y_t - \hat{y}_t\|}{\sum y_t}$ | Sai số phần trăm có trọng số; không bị lỗi chia cho 0 khi từng ngày riêng lẻ bằng 0. |
-| **Bias** | $\frac{1}{N} \sum (\hat{y}_t - y_t)$ | Xu hướng lệch: $>0$ là dự báo thừa (tăng chi phí lưu kho), $<0$ là dự báo thiếu (tăng nguy cơ hết hàng). |
-| **MASE** | $\frac{\text{MAE}}{\frac{1}{T-1}\sum_{t=2}^T \|y_t - y_{t-1}\|}$ | Sai số tương đối so với mô hình Naive 1 bước trên tập train. $\text{MASE} < 1$ thể hiện mô hình tốt hơn Naive cơ bản. |
+| **Bias** | $\frac{1}{N} \sum (\hat{y}_t - y_t)$ | Xu hướng lệch: $>0$ là dự báo thừa (tăng chi phí lưu kho), $<0$ là dự báo thiếu (tăng nguy cơ hết hàng). **Quy ước dấu**: $\text{dự báo} - \text{thực tế}$ ($\hat{y} - y$); dương = over-forecast, âm = under-forecast. |
+| **MASE** | Xem chi tiết bên dưới | Sai số tuyệt đối chuẩn hóa theo thang đo Naive 1 bước trên tập train. $\text{MASE} < 1$ thể hiện mô hình tốt hơn Naive cơ bản. |
+
+### Cách tính và gộp chỉ số MASE (Mean Absolute Scaled Error)
+1. Với mỗi chuỗi SKU $i$ tại origin $o_k$, thang đo chuẩn hóa (in-sample scale) được tính trên toàn bộ lịch sử bán hàng đến $o_k$:
+   $$\text{scale}_{i,k} = \frac{1}{T_k - 1} \sum_{t=2}^{T_k} |y_{i,t} - y_{i,t-1}|$$
+   Nếu $\text{scale}_{i,k} = 0$ (chuỗi không biến thiên), hệ thống dừng và báo lỗi theo quy định.
+2. MASE của chuỗi $i$ tại fold $k$:
+   $$\text{MASE}_{i,k} = \frac{\text{MAE}_{i,k}}{\text{scale}_{i,k}} = \frac{\frac{1}{28} \sum_{h=1}^{28} |y_{i, o_k+h} - \hat{y}_{i, o_k+h}|}{\text{scale}_{i,k}}$$
+3. **Cơ chế gộp MASE (Aggregation)**: MASE của một nhóm hoặc của toàn bộ 13 fold được tính bằng **trung bình số học (unweighted mean)** trên toàn bộ các cặp $(\text{origin}, \text{SKU})$:
+   $$\text{MASE}_{\text{overall}} = \frac{1}{K \times M} \sum_{k=0}^{12} \sum_{i=1}^{60} \text{MASE}_{i,k}$$
+   *Lưu ý cốt lõi*: Trong cách tính này, **mỗi SKU có trọng số ngang nhau** (1 phiếu bình đẳng unweighted), bất kể SKU đó bán được 100 sản phẩm/ngày hay chỉ 0.1 sản phẩm/ngày.
 
 ---
 
@@ -52,10 +62,112 @@ Theo quy định tại Mục 2 của `AGENTS.md`, **cấm dùng MAPE** vì dữ 
 
 Kết quả dự báo trên 13 fold ($21.840$ điểm dữ liệu cho mỗi mô hình) được tổng hợp và phân tích theo 4 góc độ:
 
-1. **Tổng thể (Overall)**: Đánh giá hiệu năng bình quân trên toàn bộ 60 SKU và 13 fold.
-2. **Theo từng Fold (By Fold)**: Theo dõi độ ổn định của mô hình qua các mùa trong năm (từ tháng 5/2015 đến tháng 5/2016).
-3. **Theo Ngành hàng (By Category)**: Phân tách riêng cho `FOODS`, `HOBBIES`, `HOUSEHOLD` để nhận diện thế mạnh của từng thuật toán trên các nhóm mặt hàng khác nhau.
+1. **Tổng thể (Overall)**: Đánh giá hiệu năng bình quân trên toàn bộ 60 SKU và 13 fold ($60 \times 28 \times 13 = 21.840$ lượt dự báo).
+2. **Theo từng Fold (By Fold)**: Theo dõi độ ổn định của mô hình qua các mùa trong năm (13 fold trải dài từ tháng 5/2015 đến tháng 5/2016).
+3. **Theo Ngành hàng (By Category)**: Phân tách riêng cho `FOODS` (20 SKU), `HOBBIES` (20 SKU), `HOUSEHOLD` (20 SKU).
 4. **Theo Mức độ gián đoạn (By Zero-demand Tier)**: Chia 60 SKU thành 3 nhóm dựa trên tỷ lệ ngày bán bằng 0 trong tập train ($d_1 \dots d_{1577}$):
-   - `smooth` ($< 33\%$ ngày bằng 0): Hàng bán nhanh, nhu cầu liên tục.
-   - `medium` ($33\% - 66\%$ ngày bằng 0): Nhu cầu trung bình.
-   - `intermittent` ($> 66\%$ ngày bằng 0): Nhu cầu gián đoạn mạnh, nhiều ngày liên tiếp không có lượt mua.
+   - `smooth` ($< 33\%$ ngày bằng 0): **11 SKU** (tỷ lệ ngày 0 trung bình: 13.9%, doanh số trung bình cao: 11.1 sản phẩm/ngày).
+   - `medium` ($33\% - 66\%$ ngày bằng 0): **29 SKU** (tỷ lệ ngày 0 trung bình: 50.4%, doanh số trung bình: 1.3 sản phẩm/ngày).
+   - `intermittent` ($> 66\%$ ngày bằng 0): **20 SKU** (tỷ lệ ngày 0 trung bình: 81.9%, doanh số trung bình thấp: 0.3 sản phẩm/ngày).
+
+---
+
+## 5. Mô hình LightGBM (Phase 3b)
+
+### Chiến lược dự báo
+
+LightGBM được huấn luyện theo chiến lược **Direct Multi-Step Forecasting**: một mô hình duy nhất cho toàn bộ 60 SKU, dự báo trực tiếp 28 ngày (không đệ quy). Mỗi hàng trong tập huấn luyện là một bộ `(SKU, origin_t, horizon_h)` với $h = 1 \dots 28$; `horizon_h` được đưa vào làm feature riêng biệt để mô hình học được hình dạng dự báo khác nhau theo từng bước horizon.
+
+### Tập Feature (21 features)
+
+**Nhóm A — Tại origin t (chỉ dùng lịch sử $\le t$, đảm bảo không rò rỉ dữ liệu):**
+
+| Feature | Mô tả |
+|---|---|
+| `lag_t0`, `lag_t6`, `lag_t13`, `lag_t27` | Doanh số tại ngày $t, t-6, t-13, t-27$ |
+| `roll_mean_7/28/56`, `roll_std_7/28/56` | Trung bình & độ lệch chuẩn cuộn 7/28/56 ngày cuối tính đến $t$ |
+| `zero_ratio_28` | Tỷ lệ ngày bán = 0 trong 28 ngày cuối tính đến $t$ |
+| `days_since_last_sale` | Số ngày kể từ lần bán gần nhất trước $t$ |
+| `cat_encoded` | Mã hóa số ngành hàng: `FOODS=0`, `HOBBIES=1`, `HOUSEHOLD=2` |
+
+**Nhóm B — Ngày đích t+h (biết trước tại thời điểm dự báo — oracle features):**
+
+| Feature | Mô tả |
+|---|---|
+| `horizon_h` | Bước dự báo ($1 \dots 28$) |
+| `weekday_h`, `month_h`, `dayofmonth_h` | Thứ trong tuần ($0 \dots 6$), tháng ($1 \dots 12$), ngày trong tháng ($1 \dots 31$) |
+| `has_event_h` | Cờ nhị phân sự kiện (1 nếu có sự kiện, 0 nếu không) |
+| `snap_CA_h` | Cờ trợ cấp SNAP tại bang California |
+| `sell_price_h` | Giá bán của SKU tại ngày đích |
+| `price_ratio_h` | Tỷ lệ giá bán ngày đích so với giá bán tại origin: $\text{sell\_price}_h / \text{sell\_price}_t$ |
+
+> [!IMPORTANT]
+> **Giả định ngoại sinh biết trước (Oracle Features)**: Giá bán và lịch sự kiện của 28 ngày tiếp theo được giả định là đã biết trước tại thời điểm dự báo. Giả định này phù hợp với bối cảnh bán lẻ siêu thị (giá tuần và lịch sự kiện khuyến mãi được lên kế hoạch trước). Tuy nhiên, các mô hình baseline (Naive, SeasonalNaive, MovingAverage) **không sử dụng các biến ngoại sinh này**, nên đây là một lợi thế cấu trúc của LightGBM cần được ghi nhận minh bạch khi báo cáo so sánh.
+
+### Quy trình Tuning Siêu Tham Số
+
+- **Phạm vi dữ liệu**: Chỉ sử dụng dữ liệu trong giai đoạn trước $d_{1577}$. Tuyệt đối không dùng các fold hold-out.
+- **2 fold nội bộ**:
+  - Fold A: origin = 1521, giai đoạn validation: $d_{1522} \dots d_{1549}$.
+  - Fold B: origin = 1549, giai đoạn validation: $d_{1550} \dots d_{1577}$.
+  - Cả 2 origin đều thỏa $d \equiv 1577 \pmod 7$ (cùng thứ trong tuần) để đồng nhất với backtest chính.
+- **Lưới tìm kiếm (8 cấu hình)**:
+  - `objective`: `poisson` vs `tweedie` (với `tweedie_variance_power = 1.5`).
+  - `num_leaves`: `[15, 31]`.
+  - `learning_rate`: `[0.03, 0.05]`.
+  - Cố định: `n_estimators = 500`, `min_child_samples = 20`, `seed = 42`.
+- **Cách chọn origin huấn luyện**: Mỗi fold sử dụng **20 origin gần nhất** tính lùi từ origin với bước nhảy $\text{step} = 7$ ngày (đảm bảo đủ ít nhất 56 ngày lịch sử để tính rolling 56).
+- **Kết quả tuning**: Cấu hình đạt WAPE trung bình 2 fold nhỏ nhất là **0.5997**:
+  - `objective: tweedie` (`tweedie_variance_power: 1.5`)
+  - `num_leaves: 31`
+  - `learning_rate: 0.05`
+  - Tham số được lưu cố định tại `configs/lightgbm.yaml`.
+
+### Quy trình Backtest Hold-out (13 Folds)
+
+Tại mỗi fold $k \in \{0, 1, \dots, 12\}$ trên tập hold-out:
+1. **Lịch sử**: Dữ liệu expanding từ $d_1$ đến $d_{o_k}$ ($o_k = 1577 + 28k$).
+2. **Quy tắc chọn origin huấn luyện**: Nhất quán hoàn toàn với quy trình tuning, mỗi fold hold-out sử dụng **20 origin gần nhất** (cách nhau 7 ngày) kết thúc tại $o_k - 28$, nhằm đảm bảo nhãn tương lai 28 ngày của mọi mẫu huấn luyện nằm trọn vẹn trong giai đoạn lịch sử trước $o_k$, loại trừ hoàn toàn nguy cơ rò rỉ dữ liệu.
+3. **Huấn luyện lại**: Huấn luyện mới từ đầu (retrain from scratch) với siêu tham số cố định từ `configs/lightgbm.yaml`.
+4. **Dự báo**: Dự báo 28 ngày với `future_context_df`. Giá trị dự báo được cắt chặn dưới $\ge 0$ (clip), không làm tròn.
+5. **Kiểm tra an toàn**: Nếu WAPE tổng thể $< 0.3$, script tự động dừng và cảnh báo nghi ngờ rò rỉ.
+
+---
+
+## 6. So sánh Kết quả Thực nghiệm: LightGBM vs Baselines
+
+### Bảng tổng hợp hiệu năng 4 mô hình (Hold-out 13 Folds, 21.840 lượt dự báo)
+
+| Mô hình | WAPE | MASE | MAE | RMSE | Bias | Số fold thắng MA (WAPE) | Số fold thắng MA (MASE) |
+|---|---|---|---|---|---|---|---|
+| **LightGBM** | **0.6476** | 0.9182 | **1.5845** | **4.5063** | -0.1419 | **11 / 13** | 6 / 13 |
+| **MovingAverage** | 0.7306 | **0.9179** | 1.7877 | 5.5607 | -0.0079 | 0 / 13 | 0 / 13 |
+| **SeasonalNaive** | 0.7908 | 1.0270 | 1.9349 | 5.6084 | -0.1277 | 3 / 13 | 0 / 13 |
+| **Naive** | 0.8843 | 1.1382 | 2.1637 | 6.4648 | +0.2866 | 2 / 13 | 0 / 13 |
+
+### Phân tích hiện tượng: Vì sao LightGBM vượt trội MovingAverage ở WAPE/MAE/RMSE nhưng MASE gần như tương đương?
+
+Dữ liệu thực nghiệm cho thấy một hiện tượng đáng chú ý: LightGBM giảm WAPE đáng kể so với MovingAverage (**0.6476 vs 0.7306**, tức giảm 8.30 điểm phần trăm), giảm MAE (**1.5845 vs 1.7877**) và RMSE (**4.5063 vs 5.5607**), đồng thời thắng ở **11/13 fold** theo WAPE; tuy nhiên, chỉ số MASE của hai mô hình lại xấp xỉ bằng nhau (**0.9182 vs 0.9179**).
+
+Hiện tượng này được giải thích hoàn toàn bằng toán học và cơ chế gộp chỉ số theo từng nhóm mặt hàng:
+
+#### 1. Sự khác biệt giữa cơ chế Volume-Weighted (WAPE/MAE/RMSE) và Unweighted (MASE)
+- **WAPE** tính theo tổng sai số chia cho tổng doanh số: $\text{WAPE} = \frac{\sum |y - \hat{y}|}{\sum y}$. Do đó, các SKU có lượng bán lớn (`smooth`) đóng góp phần lớn vào cả tử số lẫn mẫu số.
+- Ngược lại, **MASE** được tính bằng trung bình số học unweighted qua từng SKU: mỗi SKU được gán một quyền số bằng nhau ($1/60$), bất kể lượng bán ra là bao nhiêu.
+
+#### 2. Kết quả đo lường thực tế theo từng nhóm nhu cầu (Zero-demand Tier)
+
+| Nhóm | Số SKU | Mô hình | WAPE | MASE | MAE | RMSE | Bias |
+|---|---|---|---|---|---|---|---|
+| **`smooth`** | 11 | **LightGBM** | **0.5210** | **0.7991** | **5.0870** | **10.1119** | -0.8460 |
+| | | MovingAverage | 0.6364 | 0.8883 | 6.2138 | 12.6459 | -0.0322 |
+| **`medium`** | 29 | **LightGBM** | **0.9167** | **0.8026** | **1.0595** | **1.7178** | +0.0175 |
+| | | MovingAverage | 0.9169 | 0.8068 | 1.0597 | 1.7411 | -0.0001 |
+| **`intermittent`** | 20 | LightGBM | 1.4269 | 1.1514 | 0.4193 | **0.6355** | +0.0141 |
+| | | **MovingAverage** | **1.3918** | **1.0952** | **0.4089** | 0.6436 | -0.0058 |
+
+#### 3. Diễn giải số liệu thực tế:
+- **Trên nhóm `smooth` (11 SKU, nhu cầu cao & liên tục)**: LightGBM vượt trội toàn diện so với MovingAverage: WAPE giảm từ 0.6364 xuống 0.5210 (giảm 11.54 điểm %), MASE giảm từ 0.8883 xuống 0.7991, MAE giảm từ 6.2138 xuống 5.0870, RMSE giảm từ 12.6459 xuống 10.1119. Nhóm này đóng góp khối lượng doanh số lớn nhất, kéo toàn bộ WAPE, MAE và RMSE tổng thể của LightGBM giảm mạnh.
+- **Trên nhóm `medium` (29 SKU, nhu cầu trung bình)**: Hai mô hình có hiệu năng gần như tương đương: WAPE đạt 0.9167 vs 0.9169; MASE đạt 0.8026 vs 0.8068.
+- **Trên nhóm `intermittent` (20 SKU, nhu cầu gián đoạn, nhiều ngày bằng 0)**: MovingAverage nhỉnh hơn một chút về WAPE (1.3918 vs 1.4269) và MASE (1.0952 vs 1.1514), trong khi LightGBM có RMSE tốt hơn một chút (0.6355 vs 0.6436).
+- **Tổng hòa khi tính MASE overall**: Do có tới $20 + 29 = 49$ SKU (chiếm $81.7\%$ tổng số SKU) thuộc nhóm medium và intermittent, khi tính trung bình unweighted trên 60 SKU, ưu thế nhẹ của MovingAverage ở 20 SKU intermittent đã bù trừ cho ưu thế mạnh của LightGBM ở 11 SKU smooth. Kết quả là MASE tổng thể của hai mô hình gần như cân bằng nhau ($0.9182$ vs $0.9179$).
