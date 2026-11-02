@@ -1,0 +1,22 @@
+{
+  "model": "Chronos2-Exogenous",
+  "variant": "chronos2_exogenous",
+  "folds": [
+    0
+  ],
+  "origins": [
+    1577
+  ],
+  "row_count": 1680,
+  "elapsed_seconds": 54.619357699999455,
+  "bias": -0.17949227495784206,
+  "zero_forecast_rate_by_zero_tier": {
+    "intermittent": 0.09107142857142857,
+    "medium": 0.03078817733990148,
+    "smooth": 0.05194805194805195
+  },
+  "all_forecasts_zero": false,
+  "prediction_file": "results\\predictions\\chronos2_exogenous_pilot.parquet",
+  "torch": "2.15.0+cpu",
+  "chronos_forecasting": "2.3.2"
+}

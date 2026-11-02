@@ -89,6 +89,26 @@ def calc_bias(
     return float(np.mean(yp - yt))
 
 
+def calc_pinball_loss(
+    y_true: Union[np.ndarray, list],
+    y_quantile: Union[np.ndarray, list],
+    quantile: float,
+) -> float:
+    """Calculate mean pinball loss for a single forecast quantile."""
+    if not 0.0 < quantile < 1.0:
+        raise ValueError("quantile must be strictly between 0 and 1")
+    yt = np.asarray(y_true, dtype=float)
+    yq = np.asarray(y_quantile, dtype=float)
+    if len(yt) == 0:
+        raise ValueError("Mang du lieu rong")
+    if yt.shape != yq.shape:
+        raise ValueError(f"Kich thuoc khong khop: y_true={yt.shape}, y_quantile={yq.shape}")
+    if not np.isfinite(yt).all() or not np.isfinite(yq).all():
+        raise ValueError("Pinball loss requires finite actuals and quantile forecasts")
+    error = yt - yq
+    return float(np.mean(np.maximum(quantile * error, (quantile - 1.0) * error)))
+
+
 def calc_mase(
     y_true: Union[np.ndarray, list],
     y_pred: Union[np.ndarray, list],

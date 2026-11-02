@@ -30,14 +30,13 @@ from src.forecasting.backtest import (
     evaluate_predictions,
 )
 from src.forecasting.features import _ensure_d_num
-from src.forecasting.tsfm_model import ChronosModel
 
 
 def run_single_chronos_fold(
     daily_df: pd.DataFrame,
     fold: int,
     origin_day: int,
-    model: ChronosModel,
+    model: "ChronosModel",
     horizon: int = 28,
 ) -> pd.DataFrame:
     """Chay 1 fold Chronos: fit -> predict -> merge actual."""
@@ -92,6 +91,8 @@ def run_chronos_backtest(
     print(f"Model ID: {model_id} (Pretrained Hugging Face, khong fine-tune)")
 
     # Khoi tao pipeline 1 lan de dung lai cho ca 13 fold
+    from src.forecasting.tsfm_model import ChronosModel
+
     model = ChronosModel(model_id=model_id, device="cpu", num_samples=20, context_length=512)
 
     all_fold_preds = []
@@ -137,7 +138,7 @@ def run_chronos_backtest(
     _plot_sample_skus(all_preds_df, daily_df, zero_tiers, Path(report_dir))
 
     # Cap nhat bang so sanh gop 5 mo hinh
-    update_5_model_comparisons(report_dir)
+    update_model_comparisons(report_dir)
 
     return overall_df, by_fold_df, by_cat_df, by_tier_df
 
@@ -191,70 +192,126 @@ def _plot_sample_skus(
     print(f"Da luu bieu do 3 SKU mau vao {report_dir}/chronos_sample_skus.png")
 
 
-def update_5_model_comparisons(report_dir: Union[str, Path] = "results/forecasting") -> None:
-    """Gop tat ca ket qua cua 5 mo hinh (3 Baseline + LightGBM + Chronos)."""
+def update_model_comparisons(
+    report_dir: Union[str, Path] = "results/forecasting",
+    prefixes_not_run: Optional[List[str]] = None,
+) -> None:
+    """Rebuild comparison tables from completed point-forecast model results.
+
+    The legacy Chronos-T5-Tiny results are intentionally excluded. Quantile
+    pinball losses remain in separate files and never enter these tables.
+    ``prefixes_not_run`` explicitly lists expected models whose backtests have
+    not run yet; every other prefix must have a by-fold result file.
+    """
     rdir = Path(report_dir)
+    all_prefixes = [
+        "baseline",
+        "lightgbm",
+        "chronos2_history",
+        "chronos2_exogenous",
+        "chronos_bolt_small_history",
+    ]
+    skipped = set(prefixes_not_run or [])
+    unknown = skipped - set(all_prefixes)
+    if unknown:
+        raise ValueError(f"Unknown prefixes_not_run: {sorted(unknown)}")
+    prefixes = [prefix for prefix in all_prefixes if prefix not in skipped]
+    if not prefixes:
+        raise ValueError("At least one model prefix must remain to build comparison tables")
+
+    expected_models_by_prefix = {
+        "baseline": {"Naive", "SeasonalNaive", "MovingAverage"},
+        "lightgbm": {"LightGBM"},
+        "chronos2_history": {"Chronos2-History"},
+        "chronos2_exogenous": {"Chronos2-Exogenous"},
+        "chronos_bolt_small_history": {"ChronosBoltSmall-History"},
+    }
+    expected_models = set().union(*(expected_models_by_prefix[p] for p in prefixes))
+    expected_count = len(expected_models)
+
+    missing = [f"{prefix}_by_fold.csv" for prefix in prefixes if not (rdir / f"{prefix}_by_fold.csv").is_file()]
+    if missing:
+        raise FileNotFoundError(
+            "Missing required by-fold result file(s): " + ", ".join(missing)
+            + ". If a model has not been run, list its prefix in prefixes_not_run."
+        )
 
     # 1. By Fold
     fold_dfs = []
-    for prefix in ["baseline", "lightgbm", "chronos"]:
+    for prefix in prefixes:
         f = rdir / f"{prefix}_by_fold.csv"
-        if f.exists():
-            fold_dfs.append(pd.read_csv(f))
+        fold_dfs.append(pd.read_csv(f))
     comp_fold = pd.concat(fold_dfs, ignore_index=True)
+    fold_models = set(comp_fold["model"].dropna().unique())
+    assert len(fold_models) == expected_count and fold_models == expected_models, (
+        f"Expected {expected_count} models {sorted(expected_models)}, "
+        f"found {len(fold_models)}: {sorted(fold_models)}"
+    )
     comp_fold = comp_fold.sort_values(by=["fold", "WAPE"]).reset_index(drop=True)
     comp_fold.to_csv(rdir / "model_comparison_by_fold.csv", index=False)
 
-    # Tinh so fold thang MovingAverage
-    ma_fold = comp_fold[comp_fold["model"] == "MovingAverage"].set_index("fold")
-    win_stats = {}
-    for model_name, grp in comp_fold.groupby("model"):
-        m_grp = grp.set_index("fold")
-        wape_wins = 0
-        mase_wins = 0
-        for f in range(13):
-            if f in m_grp.index and f in ma_fold.index:
-                if m_grp.loc[f, "WAPE"] < ma_fold.loc[f, "WAPE"]:
-                    wape_wins += 1
-                if m_grp.loc[f, "MASE"] < ma_fold.loc[f, "MASE"]:
-                    mase_wins += 1
-        win_stats[model_name] = {
-            "wins_vs_ma_wape": f"{wape_wins}/13",
-            "wins_vs_ma_mase": f"{mase_wins}/13",
-        }
+    def fold_wins(reference: str, metric: str) -> Dict[str, str]:
+        """Count strict metric wins against one model across the 13 folds."""
+        reference_rows = comp_fold[comp_fold["model"] == reference].set_index("fold")
+        wins: Dict[str, str] = {}
+        for model_name, group in comp_fold.groupby("model"):
+            model_rows = group.set_index("fold")
+            count = sum(
+                model_rows.loc[fold_id, metric] < reference_rows.loc[fold_id, metric]
+                for fold_id in range(13)
+                if fold_id in model_rows.index and fold_id in reference_rows.index
+            )
+            wins[model_name] = f"{count}/13"
+        return wins
+
+    ma_wape_wins = fold_wins("MovingAverage", "WAPE")
+    ma_mase_wins = fold_wins("MovingAverage", "MASE")
+    lgbm_wape_wins = fold_wins("LightGBM", "WAPE")
+    lgbm_mase_wins = fold_wins("LightGBM", "MASE")
 
     # 2. Overall
     over_dfs = []
-    for prefix in ["baseline", "lightgbm", "chronos"]:
+    for prefix in prefixes:
         f = rdir / f"{prefix}_overall.csv"
-        if f.exists():
-            over_dfs.append(pd.read_csv(f))
+        if not f.is_file():
+            raise FileNotFoundError(f"Missing required overall result file: {f.name}")
+        over_dfs.append(pd.read_csv(f))
     comp_over = pd.concat(over_dfs, ignore_index=True)
-    comp_over["wins_vs_ma_wape"] = comp_over["model"].map(lambda m: win_stats.get(m, {}).get("wins_vs_ma_wape", "-"))
-    comp_over["wins_vs_ma_mase"] = comp_over["model"].map(lambda m: win_stats.get(m, {}).get("wins_vs_ma_mase", "-"))
+    overall_models = set(comp_over["model"].dropna().unique())
+    assert len(overall_models) == expected_count and overall_models == expected_models, (
+        f"Expected {expected_count} models {sorted(expected_models)}, "
+        f"found {len(overall_models)}: {sorted(overall_models)}"
+    )
+    comp_over["wins_vs_ma_wape"] = comp_over["model"].map(ma_wape_wins).fillna("-")
+    comp_over["wins_vs_ma_mase"] = comp_over["model"].map(ma_mase_wins).fillna("-")
+    comp_over["wins_vs_lgbm_wape"] = comp_over["model"].map(lgbm_wape_wins).fillna("-")
+    comp_over["wins_vs_lgbm_mase"] = comp_over["model"].map(lgbm_mase_wins).fillna("-")
     comp_over = comp_over.sort_values(by="WAPE").reset_index(drop=True)
     comp_over.to_csv(rdir / "model_comparison_overall.csv", index=False)
 
     # 3. By Category
     cat_dfs = []
-    for prefix in ["baseline", "lightgbm", "chronos"]:
+    for prefix in prefixes:
         f = rdir / f"{prefix}_by_category.csv"
         if f.exists():
             cat_dfs.append(pd.read_csv(f))
-    comp_cat = pd.concat(cat_dfs, ignore_index=True)
-    comp_cat = comp_cat.sort_values(by=["cat_id", "WAPE"]).reset_index(drop=True)
-    comp_cat.to_csv(rdir / "model_comparison_by_category.csv", index=False)
+    if cat_dfs:
+        comp_cat = pd.concat(cat_dfs, ignore_index=True)
+        comp_cat = comp_cat.sort_values(by=["cat_id", "WAPE"]).reset_index(drop=True)
+        comp_cat.to_csv(rdir / "model_comparison_by_category.csv", index=False)
 
     # 4. By Zero Tier
     tier_dfs = []
-    for prefix in ["baseline", "lightgbm", "chronos"]:
+    for prefix in prefixes:
         f = rdir / f"{prefix}_by_zero_tier.csv"
         if f.exists():
             tier_dfs.append(pd.read_csv(f))
-    comp_tier = pd.concat(tier_dfs, ignore_index=True)
-    comp_tier = comp_tier.sort_values(by=["zero_tier", "WAPE"]).reset_index(drop=True)
-    comp_tier.to_csv(rdir / "model_comparison_by_zero_tier.csv", index=False)
-    print("Da cap nhat thanh cong ca 4 bang tong hop 5 mo hinh vao results/forecasting/")
+    if tier_dfs:
+        comp_tier = pd.concat(tier_dfs, ignore_index=True)
+        comp_tier = comp_tier.sort_values(by=["zero_tier", "WAPE"]).reset_index(drop=True)
+        comp_tier.to_csv(rdir / "model_comparison_by_zero_tier.csv", index=False)
+    model_names = sorted(overall_models)
+    print(f"Models included in comparison ({len(model_names)}/{expected_count}): {', '.join(model_names)}")
 
 
 if __name__ == "__main__":

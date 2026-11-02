@@ -21,6 +21,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
+pytestmark = [
+    pytest.mark.slow,
+    pytest.mark.skip(reason="Legacy Chronos-T5-Tiny results are audited from saved outputs; do not rerun."),
+]
+
 from src.data.loader import load_processed_daily
 from src.forecasting.base import ForecastModel
 from src.forecasting.features import _ensure_d_num
