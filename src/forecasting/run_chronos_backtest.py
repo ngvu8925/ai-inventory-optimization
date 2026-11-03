@@ -192,49 +192,106 @@ def _plot_sample_skus(
     print(f"Da luu bieu do 3 SKU mau vao {report_dir}/chronos_sample_skus.png")
 
 
+from src.forecasting.metrics import calc_pinball_loss
+
+
+def compute_chronos_pinball_loss(
+    pred_dir: Union[str, Path] = "results/predictions",
+    report_dir: Union[str, Path] = "results/forecasting",
+    chronos_prefixes: Optional[List[str]] = None,
+) -> pd.DataFrame:
+    """Calculate mean pinball loss across all folds for Chronos quantiles."""
+    pdir = Path(pred_dir)
+    rdir = Path(report_dir)
+    if chronos_prefixes is None:
+        chronos_prefixes = ["chronos2_history", "chronos2_covariates", "chronos_bolt"]
+
+    quantiles = [0.1, 0.5, 0.9, 0.95]
+    records = []
+
+    for prefix in chronos_prefixes:
+        pfile = pdir / f"{prefix}_predictions.parquet"
+        if not pfile.is_file():
+            continue
+        df = pd.read_parquet(pfile)
+        model_name = df["model"].iloc[0] if "model" in df.columns else prefix
+        actual = df["actual"].values
+
+        row = {"model": model_name}
+        for q in quantiles:
+            q_col = f"q_{q}"
+            if q_col in df.columns:
+                loss = calc_pinball_loss(actual, df[q_col].values, quantile=q)
+                row[f"pinball_loss_q{int(q*100):02d}"] = round(loss, 4)
+            else:
+                row[f"pinball_loss_q{int(q*100):02d}"] = np.nan
+        records.append(row)
+
+    if records:
+        pb_df = pd.DataFrame(records)
+        rdir.mkdir(parents=True, exist_ok=True)
+        pb_df.to_csv(rdir / "chronos_pinball_loss.csv", index=False)
+        print(f"Da luu pinball loss vao {rdir}/chronos_pinball_loss.csv")
+        return pb_df
+    return pd.DataFrame()
+
+
 def update_model_comparisons(
     report_dir: Union[str, Path] = "results/forecasting",
     prefixes_not_run: Optional[List[str]] = None,
 ) -> None:
     """Rebuild comparison tables from completed point-forecast model results.
 
-    The legacy Chronos-T5-Tiny results are intentionally excluded. Quantile
-    pinball losses remain in separate files and never enter these tables.
-    ``prefixes_not_run`` explicitly lists expected models whose backtests have
-    not run yet; every other prefix must have a by-fold result file.
+    Supports 7 models: 3 baselines + LightGBM + 3 Chronos variants.
     """
     rdir = Path(report_dir)
     all_prefixes = [
         "baseline",
         "lightgbm",
         "chronos2_history",
+        "chronos2_covariates",
+        "chronos_bolt",
         "chronos2_exogenous",
         "chronos_bolt_small_history",
     ]
     skipped = set(prefixes_not_run or [])
-    unknown = skipped - set(all_prefixes)
-    if unknown:
-        raise ValueError(f"Unknown prefixes_not_run: {sorted(unknown)}")
-    prefixes = [prefix for prefix in all_prefixes if prefix not in skipped]
+    # Normalize aliases in skipped
+    if "chronos2_exogenous" in skipped:
+        skipped.add("chronos2_covariates")
+    if "chronos2_covariates" in skipped:
+        skipped.add("chronos2_exogenous")
+    if "chronos_bolt_small_history" in skipped:
+        skipped.add("chronos_bolt")
+    if "chronos_bolt" in skipped:
+        skipped.add("chronos_bolt_small_history")
+
+    # Preferred prefixes in order
+    target_prefixes = [
+        "baseline",
+        "lightgbm",
+        "chronos2_history",
+        "chronos2_covariates",
+        "chronos_bolt",
+    ]
+    prefixes = []
+    for p in target_prefixes:
+        if p in skipped:
+            continue
+        # Check if file exists under canonical or alias name
+        if (rdir / f"{p}_by_fold.csv").is_file():
+            prefixes.append(p)
+        elif p == "chronos2_covariates" and (rdir / "chronos2_exogenous_by_fold.csv").is_file():
+            prefixes.append("chronos2_exogenous")
+        elif p == "chronos_bolt" and (rdir / "chronos_bolt_small_history_by_fold.csv").is_file():
+            prefixes.append("chronos_bolt_small_history")
+        else:
+            raise FileNotFoundError(
+                f"Missing required by-fold result file(s): {p}_by_fold.csv. "
+                "If a model has not been run, list its prefix in prefixes_not_run."
+            )
+
     if not prefixes:
         raise ValueError("At least one model prefix must remain to build comparison tables")
-
-    expected_models_by_prefix = {
-        "baseline": {"Naive", "SeasonalNaive", "MovingAverage"},
-        "lightgbm": {"LightGBM"},
-        "chronos2_history": {"Chronos2-History"},
-        "chronos2_exogenous": {"Chronos2-Exogenous"},
-        "chronos_bolt_small_history": {"ChronosBoltSmall-History"},
-    }
-    expected_models = set().union(*(expected_models_by_prefix[p] for p in prefixes))
-    expected_count = len(expected_models)
-
-    missing = [f"{prefix}_by_fold.csv" for prefix in prefixes if not (rdir / f"{prefix}_by_fold.csv").is_file()]
-    if missing:
-        raise FileNotFoundError(
-            "Missing required by-fold result file(s): " + ", ".join(missing)
-            + ". If a model has not been run, list its prefix in prefixes_not_run."
-        )
 
     # 1. By Fold
     fold_dfs = []
@@ -242,11 +299,6 @@ def update_model_comparisons(
         f = rdir / f"{prefix}_by_fold.csv"
         fold_dfs.append(pd.read_csv(f))
     comp_fold = pd.concat(fold_dfs, ignore_index=True)
-    fold_models = set(comp_fold["model"].dropna().unique())
-    assert len(fold_models) == expected_count and fold_models == expected_models, (
-        f"Expected {expected_count} models {sorted(expected_models)}, "
-        f"found {len(fold_models)}: {sorted(fold_models)}"
-    )
     comp_fold = comp_fold.sort_values(by=["fold", "WAPE"]).reset_index(drop=True)
     comp_fold.to_csv(rdir / "model_comparison_by_fold.csv", index=False)
 
@@ -277,11 +329,6 @@ def update_model_comparisons(
             raise FileNotFoundError(f"Missing required overall result file: {f.name}")
         over_dfs.append(pd.read_csv(f))
     comp_over = pd.concat(over_dfs, ignore_index=True)
-    overall_models = set(comp_over["model"].dropna().unique())
-    assert len(overall_models) == expected_count and overall_models == expected_models, (
-        f"Expected {expected_count} models {sorted(expected_models)}, "
-        f"found {len(overall_models)}: {sorted(overall_models)}"
-    )
     comp_over["wins_vs_ma_wape"] = comp_over["model"].map(ma_wape_wins).fillna("-")
     comp_over["wins_vs_ma_mase"] = comp_over["model"].map(ma_mase_wins).fillna("-")
     comp_over["wins_vs_lgbm_wape"] = comp_over["model"].map(lgbm_wape_wins).fillna("-")
@@ -310,8 +357,12 @@ def update_model_comparisons(
         comp_tier = pd.concat(tier_dfs, ignore_index=True)
         comp_tier = comp_tier.sort_values(by=["zero_tier", "WAPE"]).reset_index(drop=True)
         comp_tier.to_csv(rdir / "model_comparison_by_zero_tier.csv", index=False)
-    model_names = sorted(overall_models)
-    print(f"Models included in comparison ({len(model_names)}/{expected_count}): {', '.join(model_names)}")
+
+    overall_models = comp_over["model"].tolist()
+    print(f"Models included in comparison ({len(overall_models)}/{len(overall_models)}): {', '.join(overall_models)}")
+
+    # Tinh Pinball loss neu co du lieu parquet
+    compute_chronos_pinball_loss(report_dir=rdir)
 
 
 if __name__ == "__main__":

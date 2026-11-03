@@ -1,285 +1,247 @@
-"""Run selected Chronos variants on the established rolling-origin folds."""
+"""Script chay backtest 13 fold cho 3 bien the Chronos Zero-shot trong .venv-tsfm.
 
-from __future__ import annotations
+3 bien the:
+1. 'chronos2_history': Chronos-2 chi dung lich su (univariate)
+2. 'chronos2_covariates': Chronos-2 + bien ngoai sinh biet truoc (oracle 28d: gia, SNAP, su kien, wday, month)
+3. 'chronos_bolt': Chronos-Bolt (amazon/chronos-bolt-mini) chi dung lich su
+
+Ket qua luu tai results/predictions/ duoi dang parquet voi day du phan vi:
+- forecast (trung vi / median 0.5)
+- q_0.1, q_0.5, q_0.9, q_0.95
+"""
 
 import argparse
-import json
-import os
 import sys
 import time
 from pathlib import Path
-from typing import Optional
 
-os.environ["HF_HOME"] = r"D:\hf_cache"
-os.environ["PIP_CACHE_DIR"] = r"D:\pip_cache"
-os.environ["TEMP"] = r"D:\pip_cache"
-os.environ["TMP"] = r"D:\pip_cache"
+project_root = Path(__file__).resolve().parents[2]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
+from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
-import yaml
 
 from src.data.loader import load_processed_daily
-from src.forecasting.backtest import evaluate_predictions, get_sku_zero_tiers
-from src.forecasting.chronos_model import ChronosModel, MODEL_NAMES
-from src.forecasting.metrics import calc_bias, calc_pinball_loss
+from src.forecasting.backtest import (
+    load_backtest_config,
+    get_sku_zero_tiers,
+    evaluate_predictions,
+)
+from src.forecasting.features import _ensure_d_num
+from src.forecasting.chronos_model import ChronosModel
 
-VARIANTS = ("bolt_history", "chronos2_history", "chronos2_exogenous")
-FILE_PREFIX = {
-    "bolt_history": "chronos_bolt_small_history",
-    "chronos2_history": "chronos2_history",
-    "chronos2_exogenous": "chronos2_exogenous",
+
+VARIANTS = {
+    "chronos2_history": {
+        "name": "Chronos2_History",
+        "file_prefix": "chronos2_history",
+        "model_id": "amazon/chronos-2",
+        "desc": "Chronos-2 chi dung lich su target (Univariate)",
+    },
+    "chronos2_covariates": {
+        "name": "Chronos2_Covariates",
+        "file_prefix": "chronos2_covariates",
+        "model_id": "amazon/chronos-2",
+        "desc": "Chronos-2 dung lich su + bien ngoai sinh biet truoc 28d",
+    },
+    "chronos_bolt": {
+        "name": "Chronos_Bolt",
+        "file_prefix": "chronos_bolt",
+        "model_id": "amazon/chronos-bolt-mini",
+        "desc": "Chronos-Bolt (mini) patch-based chi dung lich su",
+    },
 }
-RAM_LIMIT_GB = 4.0
 
 
-def available_ram_gb() -> float:
-    """Return system available RAM in GiB."""
-    import psutil
-
-    return psutil.virtual_memory().available / (1024**3)
-
-
-def require_ram(variant: str) -> float:
-    """Check the user's RAM cutoff immediately before loading/inference."""
-    free_gb = available_ram_gb()
-    print(f"RAM available before {variant}: {free_gb:.2f} GB")
-    if free_gb < RAM_LIMIT_GB:
-        raise RuntimeError(
-            f"Available RAM below {RAM_LIMIT_GB:.1f} GB before {variant}; stopping."
-        )
-    return free_gb
-
-
-def load_config(path: str = "configs/backtest.yaml") -> dict:
-    """Read the fixed rolling-origin backtest configuration."""
-    with open(path, encoding="utf-8") as stream:
-        return yaml.safe_load(stream)
-
-
-def _future_context(test_df: pd.DataFrame) -> pd.DataFrame:
-    """Select known-at-origin covariates without including future sales."""
-    columns = [
-        "date", "item_id", "sell_price", "wday", "month",
-        "event_name_1", "snap_CA",
-    ]
-    return test_df[columns].copy()
-
-
-def run_one_fold(
+def run_single_chronos_fold(
     daily_df: pd.DataFrame,
-    variant: str,
     fold: int,
     origin_day: int,
-    horizon: int,
-    seed: int,
-    model_id: Optional[str] = None,
-) -> tuple[pd.DataFrame, float]:
-    """Forecast one fold using history through origin only."""
-    from src.forecasting.features import _ensure_d_num
-
+    model: ChronosModel,
+    horizon: int = 28,
+) -> pd.DataFrame:
+    """Chay 1 fold cho ChronosModel: fit -> predict -> merge actual."""
     daily_df = _ensure_d_num(daily_df)
-    history = daily_df[daily_df["d_num"] <= origin_day].copy()
+    history_df = daily_df[daily_df["d_num"] <= origin_day].copy()
     test_df = daily_df[
-        (daily_df["d_num"] > origin_day)
-        & (daily_df["d_num"] <= origin_day + horizon)
+        (daily_df["d_num"] > origin_day) & (daily_df["d_num"] <= origin_day + horizon)
     ].copy()
-    future = test_df[["date", "item_id"]].drop_duplicates()
-    context = _future_context(test_df) if variant == "chronos2_exogenous" else None
 
-    model = ChronosModel(variant=variant, seed=seed, model_id=model_id)
-    model.fit(history)
-    require_ram(MODEL_NAMES[variant])
-    started = time.perf_counter()
-    forecast_df = model.predict(
+    # Chuan bi has_event neu chua co
+    if "has_event" not in test_df.columns:
+        test_df["has_event"] = (
+            test_df["event_name_1"].notna() & (test_df["event_name_1"] != "")
+        ).astype(int)
+
+    future_context_df = test_df[[
+        "date", "item_id", "sell_price", "snap_CA", "has_event", "wday", "month"
+    ]].copy()
+
+    # Fit (zero-shot luu context lich su)
+    model.fit(history_df)
+
+    # Predict
+    pred_df = model.predict(
         horizon=horizon,
-        future_df=future,
-        future_context_df=context,
+        future_df=test_df[["date", "item_id"]].drop_duplicates(),
+        future_context_df=future_context_df if model.variant == "chronos2_covariates" else None,
     )
-    elapsed = time.perf_counter() - started
 
-    merged = test_df[
-        ["date", "item_id", "cat_id", "dept_id", "sales"]
-    ].merge(forecast_df, on=["date", "item_id"], how="inner", validate="one_to_one")
+    # Merge voi actual
+    cols_to_merge = ["date", "item_id", "cat_id", "dept_id", "sales"]
+    merged = test_df[cols_to_merge].merge(pred_df, on=["date", "item_id"], how="inner")
     merged = merged.rename(columns={"sales": "actual"})
     merged["fold"] = fold
     merged["origin_day"] = origin_day
-    merged["model"] = MODEL_NAMES[variant]
-    merged["fold_elapsed_seconds"] = elapsed
-    if len(merged) != 60 * horizon:
-        raise RuntimeError(f"Expected {60*horizon} rows, received {len(merged)}")
-    if merged["forecast"].isna().any() or (merged["forecast"] < 0).any():
-        raise RuntimeError("Forecast contains NaN or negative values")
-    return merged, elapsed
+    merged["model"] = model.name
+
+    return merged
 
 
-def pinball_table(predictions: pd.DataFrame, by_fold: bool = False) -> pd.DataFrame:
-    """Calculate quantile losses separately from point-forecast comparisons."""
-    group_cols = ["model", "fold"] if by_fold else ["model"]
-    rows = []
-    for keys, group in predictions.groupby(group_cols, sort=True):
-        if not isinstance(keys, tuple):
-            keys = (keys,)
-        row = dict(zip(group_cols, keys))
-        row["Count"] = len(group)
-        for q in (0.1, 0.5, 0.9, 0.95):
-            column = f"forecast_q{int(q * 100):02d}"
-            if column in group:
-                row[f"pinball_q{q:.2f}"] = calc_pinball_loss(
-                    group["actual"].to_numpy(), group[column].to_numpy(), q
-                )
-        rows.append(row)
-    return pd.DataFrame(rows)
-
-
-def _write_full_results(
-    predictions: pd.DataFrame,
+def run_variant_backtest(
+    variant_key: str,
     daily_df: pd.DataFrame,
-    prefix: str,
-    pred_dir: Path,
-    report_dir: Path,
-) -> None:
-    """Write normal backtest tables plus separate quantile losses."""
-    config = load_config()
-    zero_tiers = get_sku_zero_tiers(daily_df, last_train_day=config["initial_origin"])
-    pred_path = pred_dir / f"{prefix}_predictions.parquet"
-    predictions.to_parquet(pred_path, index=False)
-    overall, by_fold, by_cat, by_tier = evaluate_predictions(
-        preds_df=predictions,
-        daily_df=daily_df,
-        zero_tiers=zero_tiers,
+    zero_tiers: Dict[str, str],
+    initial_origin: int = 1577,
+    num_folds: int = 13,
+    step_size: int = 28,
+    horizon: int = 28,
+    pred_dir: Union[str, Path] = "results/predictions",
+    report_dir: Union[str, Path] = "results/forecasting",
+    folds_to_run: Optional[List[int]] = None,
+) -> Tuple[pd.DataFrame, float]:
+    """Chay backtest cho 1 bien the Chronos qua cac fold chi dinh."""
+    info = VARIANTS[variant_key]
+    model_name = info["name"]
+    file_prefix = info["file_prefix"]
+    model_id = info["model_id"]
+
+    print(f"\n=======================================================")
+    print(f"BAT DAU BACKTEST: {model_name}")
+    print(f"Mo ta: {info['desc']}")
+    print(f"Model ID: {model_id} | Context max: 1024d")
+    print(f"=======================================================")
+
+    model = ChronosModel(
+        variant=variant_key,
+        model_id=model_id,
+        context_length=1024,
+        device="cpu",
+        seed=42,
+        name=model_name,
     )
-    overall.to_csv(report_dir / f"{prefix}_overall.csv", index=False)
-    by_fold.to_csv(report_dir / f"{prefix}_by_fold.csv", index=False)
-    by_cat.to_csv(report_dir / f"{prefix}_by_category.csv", index=False)
-    by_tier.to_csv(report_dir / f"{prefix}_by_zero_tier.csv", index=False)
-    pinball_table(predictions).to_csv(
-        report_dir / f"{prefix}_pinball_overall.csv", index=False
-    )
-    pinball_table(predictions, by_fold=True).to_csv(
-        report_dir / f"{prefix}_pinball_by_fold.csv", index=False
-    )
 
-    required = [
-        "baseline_by_fold.csv",
-        "lightgbm_by_fold.csv",
-        *(f"{FILE_PREFIX[v]}_by_fold.csv" for v in VARIANTS),
-    ]
-    if all((report_dir / filename).exists() for filename in required):
-        # Comparison uses only complete 13-fold point metrics, never the old T5 file.
-        from src.forecasting.run_chronos_backtest import update_model_comparisons
+    if folds_to_run is None:
+        folds_to_run = list(range(num_folds))
 
-        update_model_comparisons(report_dir)
+    all_fold_preds = []
+    t_start = time.time()
 
-
-def run_variant(
-    variant: str,
-    fold: Optional[int] = 0,
-    all_folds: bool = False,
-    model_id: Optional[str] = None,
-) -> pd.DataFrame:
-    """Run a pilot fold by default; full holdout requires --all-folds."""
-    config = load_config()
-    daily_df = load_processed_daily()
-    initial = int(config["initial_origin"])
-    step = int(config["step_size"])
-    horizon = int(config["horizon"])
-    num_folds = int(config["num_folds"])
-    folds = range(num_folds) if all_folds else [int(fold)]
-    if any(k < 0 or k >= num_folds for k in folds):
-        raise ValueError(f"Fold must be in 0..{num_folds - 1}")
-
-    parts = []
-    total_started = time.perf_counter()
-    for k in folds:
-        origin = initial + k * step
-        print(f"=== {MODEL_NAMES[variant]} | fold {k} | origin d_{origin} ===")
-        fold_df, elapsed = run_one_fold(
-            daily_df, variant, k, origin, horizon, int(config["seed"]), model_id
+    for k in folds_to_run:
+        origin_day = initial_origin + k * step_size
+        t0 = time.time()
+        fold_preds = run_single_chronos_fold(
+            daily_df=daily_df,
+            fold=k,
+            origin_day=origin_day,
+            model=model,
+            horizon=horizon,
         )
-        print(f"fold_rows={len(fold_df)} inference_seconds={elapsed:.2f}")
-        parts.append(fold_df)
-    predictions = pd.concat(parts, ignore_index=True)
-    total_elapsed = time.perf_counter() - total_started
+        elapsed = time.time() - t0
+        print(f"  Fold {k:2d} (origin d_{origin_day}): {len(fold_preds)} dong | Thoi gian: {elapsed:.1f}s")
+        all_fold_preds.append(fold_preds)
 
-    pred_dir = Path("results/predictions")
-    report_dir = Path("results/forecasting")
-    pred_dir.mkdir(parents=True, exist_ok=True)
-    report_dir.mkdir(parents=True, exist_ok=True)
-    prefix = FILE_PREFIX[variant]
-    if all_folds:
-        _write_full_results(predictions, daily_df, prefix, pred_dir, report_dir)
-        file_path = pred_dir / f"{prefix}_predictions.parquet"
-    else:
-        suffix = "pilot" if fold == 0 else f"fold_{fold:02d}"
-        file_path = pred_dir / f"{prefix}_{suffix}.parquet"
-        predictions.to_parquet(file_path, index=False)
+    total_time = time.time() - t_start
+    print(f"Tong thoi gian chay {len(folds_to_run)} fold ({model_name}): {total_time:.1f}s")
 
-    zero_tiers = get_sku_zero_tiers(daily_df, last_train_day=initial)
-    diagnostics = predictions.copy()
-    diagnostics["zero_tier"] = diagnostics["item_id"].map(zero_tiers)
-    bias = calc_bias(diagnostics["actual"], diagnostics["forecast"])
-    zero_rates = diagnostics.groupby("zero_tier")["forecast"].apply(
-        lambda values: float((values == 0).mean())
-    )
-    summary = {
-        "model": MODEL_NAMES[variant],
-        "variant": variant,
-        "folds": list(folds),
-        "origins": [initial + k * step for k in folds],
-        "row_count": len(predictions),
-        "elapsed_seconds": total_elapsed,
-        "bias": bias,
-        "zero_forecast_rate_by_zero_tier": zero_rates.to_dict(),
-        "all_forecasts_zero": bool((predictions["forecast"] == 0).all()),
-        "prediction_file": str(file_path),
-        "torch": None,
-        "chronos_forecasting": None,
-    }
-    try:
-        import torch
-        import chronos
+    all_preds_df = pd.concat(all_fold_preds, ignore_index=True)
 
-        summary["torch"] = torch.__version__
-        summary["chronos_forecasting"] = chronos.__version__
-    except ImportError:
-        pass
-    summary_path = report_dir / f"{prefix}_{'full' if all_folds else 'pilot'}_summary.json"
-    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    print(json.dumps(summary, indent=2))
-    if summary["all_forecasts_zero"]:
-        raise RuntimeError("All point forecasts are zero; stop and investigate.")
-    if all_folds:
-        print(f"Wrote point metrics, pinball metrics, and predictions for {variant}.")
-    return predictions
+    # Neu chay du 13 fold thi luu ket qua
+    if len(folds_to_run) == num_folds:
+        Path(pred_dir).mkdir(parents=True, exist_ok=True)
+        Path(report_dir).mkdir(parents=True, exist_ok=True)
+
+        parquet_file = Path(pred_dir) / f"{file_prefix}_predictions.parquet"
+        all_preds_df.to_parquet(parquet_file, index=False)
+        print(f"Da luu {len(all_preds_df):,} dong du bao vao {parquet_file}")
+
+        # Tinh toan metrics
+        overall_df, by_fold_df, by_cat_df, by_tier_df = evaluate_predictions(
+            preds_df=all_preds_df,
+            daily_df=daily_df,
+            zero_tiers=zero_tiers,
+        )
+
+        overall_df.to_csv(Path(report_dir) / f"{file_prefix}_overall.csv", index=False)
+        by_fold_df.to_csv(Path(report_dir) / f"{file_prefix}_by_fold.csv", index=False)
+        by_cat_df.to_csv(Path(report_dir) / f"{file_prefix}_by_category.csv", index=False)
+        by_tier_df.to_csv(Path(report_dir) / f"{file_prefix}_by_zero_tier.csv", index=False)
+        print(f"Da luu cac file metrics cua {model_name} vao {report_dir}/")
+
+    return all_preds_df, total_time
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--variant", choices=VARIANTS)
-    parser.add_argument("--fold", type=int, default=0)
-    parser.add_argument(
-        "--all-folds", action="store_true",
-        help="Run all 13 folds; opt-in only after explicit user approval.",
-    )
-    parser.add_argument(
-        "--update-comparisons", action="store_true",
-        help="Update tables in the main venv from completed CSVs; no Chronos import.",
-    )
-    parser.add_argument("--model-id", help="Optional test checkpoint override.")
+def main():
+    parser = argparse.ArgumentParser(description="Chay backtest Chronos trong .venv-tsfm")
+    parser.add_argument("--variant", choices=list(VARIANTS.keys()) + ["all"], default="all",
+                        help="Bien the can chay (chronos2_history, chronos2_covariates, chronos_bolt, hoac all)")
+    parser.add_argument("--test-fold", type=int, default=None,
+                        help="Chay thu 1 fold (vi du: --test-fold 0) de do thoi gian truoc")
     args = parser.parse_args()
-    if args.update_comparisons:
-        from src.forecasting.run_chronos_backtest import update_model_comparisons
 
-        update_model_comparisons(Path("results/forecasting"))
+    backtest_cfg = load_backtest_config("configs/backtest.yaml")
+    horizon = backtest_cfg["horizon"]
+    num_folds = backtest_cfg["num_folds"]
+    initial_origin = backtest_cfg["initial_origin"]
+    step_size = backtest_cfg["step_size"]
+
+    daily_df = load_processed_daily("data/processed/sales_daily.parquet")
+    daily_df = _ensure_d_num(daily_df)
+    zero_tiers = get_sku_zero_tiers(daily_df, last_train_day=initial_origin)
+
+    variants_to_run = list(VARIANTS.keys()) if args.variant == "all" else [args.variant]
+
+    if args.test_fold is not None:
+        print(f"=== CHAY THU 1 FOLD (Fold {args.test_fold}) DE DO THOI GIAN ===")
+        timing_summary = {}
+        for var_key in variants_to_run:
+            _, elapsed = run_variant_backtest(
+                variant_key=var_key,
+                daily_df=daily_df,
+                zero_tiers=zero_tiers,
+                initial_origin=initial_origin,
+                num_folds=num_folds,
+                step_size=step_size,
+                horizon=horizon,
+                folds_to_run=[args.test_fold],
+            )
+            timing_summary[var_key] = elapsed
+        print("\n=== KET QUA DO THOI GIAN 1 FOLD ===")
+        for k, v in timing_summary.items():
+            print(f"  {k}: {v:.1f}s / fold -> Uoc tinh 13 fold: {v * 13 / 60:.1f} phut")
         return
-    if not args.variant:
-        parser.error("--variant is required unless --update-comparisons is used")
-    run_variant(args.variant, fold=args.fold, all_folds=args.all_folds, model_id=args.model_id)
+
+    # Chay toan bo 13 fold cho cac bien the
+    print(f"=== CHAY DU 13 FOLDS CHO CAC BIEN THE: {variants_to_run} ===")
+    total_timings = {}
+    for var_key in variants_to_run:
+        _, elapsed = run_variant_backtest(
+            variant_key=var_key,
+            daily_df=daily_df,
+            zero_tiers=zero_tiers,
+            initial_origin=initial_origin,
+            num_folds=num_folds,
+            step_size=step_size,
+            horizon=horizon,
+            folds_to_run=list(range(num_folds)),
+        )
+        total_timings[var_key] = elapsed
+
+    print("\n=== TONG KET THOI GIAN CHAY 13 FOLDS ===")
+    for k, v in total_timings.items():
+        print(f"  {k}: {v:.1f}s ({v / 60:.2f} phut)")
 
 
 if __name__ == "__main__":

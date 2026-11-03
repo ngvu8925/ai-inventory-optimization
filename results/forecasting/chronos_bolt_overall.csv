@@ -1,0 +1,2 @@
+model,WAPE,MASE,MAE,RMSE,Bias,Count
+Chronos_Bolt,0.6078,0.7611,1.4871,4.7493,-0.7201,21840

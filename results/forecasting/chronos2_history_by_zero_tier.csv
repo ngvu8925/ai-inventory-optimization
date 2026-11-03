@@ -1,0 +1,4 @@
+model,zero_tier,WAPE,MASE,MAE,RMSE,Bias,Count
+Chronos2_History,intermittent,1.0106,0.7626,0.2969,0.702,-0.2721,7280
+Chronos2_History,medium,0.8419,0.7358,0.9731,1.8019,-0.4743,10556
+Chronos2_History,smooth,0.493,0.7663,4.8139,10.0953,-1.5559,4004

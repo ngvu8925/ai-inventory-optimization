@@ -1,0 +1,4 @@
+model,zero_tier,WAPE,MASE,MAE,RMSE,Bias,Count
+Chronos_Bolt,intermittent,1.0292,0.7748,0.3024,0.6994,-0.2598,7280
+Chronos_Bolt,medium,0.8565,0.7472,0.9899,1.8419,-0.5597,10556
+Chronos_Bolt,smooth,0.5071,0.7729,4.952,10.6396,-1.9798,4004

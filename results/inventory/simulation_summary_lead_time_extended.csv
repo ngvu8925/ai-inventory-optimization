@@ -1,0 +1,14 @@
+model,policy,scenario,cost_holding,cost_ordering,cost_shortage,cost_total,fill_rate,stockout_rate,num_orders,total_demand,total_short,count
+Chronos2_Covariates,baseline,lead_time_extended,17141.36,7475.0,32516.55,57132.91,0.7007,0.2877,1495,53437.0,16258.21,780
+Chronos2_History,baseline,lead_time_extended,17141.36,7475.0,32516.55,57132.91,0.7007,0.2877,1495,53437.0,16258.21,780
+Chronos_Bolt,baseline,lead_time_extended,17141.36,7475.0,32516.55,57132.91,0.7007,0.2877,1495,53437.0,16258.21,780
+LightGBM,baseline,lead_time_extended,17141.36,7475.0,32516.55,57132.91,0.7007,0.2877,1495,53437.0,16258.21,780
+MovingAverage,baseline,lead_time_extended,17141.36,7475.0,32516.55,57132.91,0.7007,0.2877,1495,53437.0,16258.21,780
+LightGBM,point_forecast,lead_time_extended,11318.31,7675.0,38392.36,57385.67,0.6976,0.2815,1535,53437.0,19196.21,780
+MovingAverage,point_forecast,lead_time_extended,13472.76,7690.0,37391.02,58553.78,0.6794,0.3367,1538,53437.0,18695.5,780
+Chronos2_Covariates,point_forecast,lead_time_extended,7925.91,7785.0,48714.86,64425.77,0.3841,0.5643,1557,53437.0,24357.42,780
+Chronos2_History,point_forecast,lead_time_extended,7862.93,7795.0,49076.54,64734.47,0.3852,0.5609,1559,53437.0,24538.33,780
+Chronos_Bolt,point_forecast,lead_time_extended,7282.97,7795.0,51680.26,66758.23,0.3932,0.5672,1559,53437.0,25840.2,780
+Chronos2_Covariates,quantile_forecast,lead_time_extended,7925.91,7585.0,48714.86,64225.77,0.3841,0.5643,1517,53437.0,24357.42,780
+Chronos2_History,quantile_forecast,lead_time_extended,7862.93,7580.0,49076.54,64519.47,0.3852,0.5609,1516,53437.0,24538.33,780
+Chronos_Bolt,quantile_forecast,lead_time_extended,7282.97,7585.0,51680.26,66548.23,0.3932,0.5672,1517,53437.0,25840.2,780

@@ -40,7 +40,7 @@ def fold_data():
 
 def _predict(history: pd.DataFrame, future: pd.DataFrame, horizon: int) -> pd.DataFrame:
     model = ChronosModel(
-        variant="bolt_history",
+        variant="chronos_bolt",
         model_id="amazon/chronos-bolt-tiny",
         seed=42,
     )
@@ -57,8 +57,12 @@ def test_bolt_tiny_fold_has_expected_rows_and_nonnegative_quantiles(fold_data):
     assert len(predictions) == 60 * 28
     assert predictions["item_id"].nunique() == 60
     assert predictions["date"].nunique() == 28
-    quantile_cols = [column for column in predictions if column.startswith("forecast_q")]
-    assert {"forecast_q10", "forecast_q50", "forecast_q90"}.issubset(quantile_cols)
+    assert "forecast" in predictions.columns
+    assert (predictions["forecast"] >= 0).all()
+    assert predictions["forecast"].notna().all()
+
+    quantile_cols = [column for column in predictions if column.startswith("q_")]
+    assert {"q_0.1", "q_0.5", "q_0.9", "q_0.95"}.issubset(quantile_cols)
     assert (predictions[quantile_cols] >= 0).all().all()
     assert predictions[quantile_cols].notna().all().all()
 

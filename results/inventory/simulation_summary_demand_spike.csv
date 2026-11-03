@@ -1,0 +1,14 @@
+model,policy,scenario,cost_holding,cost_ordering,cost_shortage,cost_total,fill_rate,stockout_rate,num_orders,total_demand,total_short,count
+Chronos2_Covariates,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
+Chronos2_History,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
+Chronos_Bolt,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
+LightGBM,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
+MovingAverage,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
+LightGBM,point_forecast,demand_spike,14992.27,13745.0,66587.45,95324.72,0.7278,0.2373,2749,106874.0,33293.72,780
+MovingAverage,point_forecast,demand_spike,17169.95,13845.0,65549.52,96564.46,0.7121,0.2723,2769,106874.0,32774.75,780
+Chronos2_Covariates,point_forecast,demand_spike,10167.03,15055.0,87224.33,112446.37,0.4276,0.4704,3011,106874.0,43612.16,780
+Chronos2_History,point_forecast,demand_spike,10002.81,15060.0,88509.14,113571.95,0.4291,0.4662,3012,106874.0,44254.57,780
+Chronos_Bolt,point_forecast,demand_spike,9350.96,15120.0,92880.16,117351.12,0.4318,0.4764,3024,106874.0,46440.04,780
+Chronos2_Covariates,quantile_forecast,demand_spike,10557.95,14605.0,86325.98,111488.93,0.4292,0.4631,2921,106874.0,43163.0,780
+Chronos2_History,quantile_forecast,demand_spike,10467.91,14660.0,86530.72,111658.63,0.4315,0.4597,2932,106874.0,43265.37,780
+Chronos_Bolt,quantile_forecast,demand_spike,9898.66,14690.0,90418.39,115007.05,0.4335,0.4717,2938,106874.0,45209.18,780
