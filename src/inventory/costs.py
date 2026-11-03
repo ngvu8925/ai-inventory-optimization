@@ -118,14 +118,18 @@ def calc_stockout_rate(
     days_with_stockout: int,
     total_days: int,
 ) -> float:
-    """Tính tỷ lệ ngày thiếu hàng = số ngày có thiếu hàng / tổng số ngày.
+    """Tính tỷ lệ ngày thiếu hàng = số ngày có nhu cầu không đáp ứng / tổng ngày.
+
+    Stockout được định nghĩa là ngày có `units_short > 0` (có nhu cầu bị mất),
+    KHÔNG phải ngày tồn kho cuối ngày bằng 0 (một ngày có thể hết sạch hàng
+    nhưng vẫn đáp ứng đủ nhu cầu).
 
     Args:
-        days_with_stockout: Số ngày tồn kho về 0 hoặc âm trước khi bán.
+        days_with_stockout: Số ngày có units_short > 0.
         total_days: Tổng số ngày trong chu kỳ mô phỏng.
 
     Returns:
-        Tỷ lệ thiếu hàng trong khoảng [0.0, 1.0].
+        Tỷ lệ ngày thiếu hàng trong khoảng [0.0, 1.0].
     """
     if total_days <= 0:
         raise ValueError("total_days phải > 0")

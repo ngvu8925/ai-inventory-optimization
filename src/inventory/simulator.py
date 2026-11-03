@@ -32,6 +32,8 @@ def simulate_inventory(
     order_qty: float,
     lead_time: int,
     initial_inventory: float,
+    dynamic_rop: Optional[np.ndarray] = None,
+    dynamic_order_qty: Optional[np.ndarray] = None,
 ) -> Dict[str, np.ndarray]:
     """Mô phỏng tồn kho theo ngày với chính sách (s=ROP, Q=order_qty) và lost-sales.
 
@@ -44,10 +46,15 @@ def simulate_inventory(
 
     Args:
         actual_demand: Chuỗi nhu cầu thực hàng ngày (độ dài T).
-        rop: Điểm đặt hàng lại.
-        order_qty: Lượng đặt mỗi lần (cố định trong mô phỏng này).
+        rop: Điểm đặt hàng lại (mặc định, dùng khi không có dynamic_rop).
+        order_qty: Lượng đặt mỗi lần (mặc định, dùng khi không có
+            dynamic_order_qty).
         lead_time: Lead time cố định (ngày).
         initial_inventory: Tồn kho ban đầu (on-hand ngay trước ngày 0).
+        dynamic_rop: Tùy chọn, mảng độ dài T — ROP riêng cho từng ngày.
+            Chỉ dùng cho chính sách tham chiếu Oracle.
+        dynamic_order_qty: Tùy chọn, mảng độ dài T — Q riêng cho từng ngày.
+            Chỉ dùng cho chính sách tham chiếu Oracle.
 
     Returns:
         Dict với các mảng độ dài T:
@@ -60,6 +67,11 @@ def simulate_inventory(
     """
     T = len(actual_demand)
     demand = np.asarray(actual_demand, dtype=float)
+
+    if dynamic_rop is not None and len(dynamic_rop) != T:
+        raise ValueError("dynamic_rop phải có cùng độ dài với actual_demand")
+    if dynamic_order_qty is not None and len(dynamic_order_qty) != T:
+        raise ValueError("dynamic_order_qty phải có cùng độ dài với actual_demand")
 
     inventory_end = np.zeros(T)
     units_sold = np.zeros(T)
@@ -101,8 +113,10 @@ def simulate_inventory(
         # 4. Kiểm tra đặt hàng: đặt khi tồn kho khả dụng <= ROP và không có đơn chờ
         # Tồn kho khả dụng = on_hand + on_order (inventory position)
         inventory_position = on_hand + on_order
-        if inventory_position <= rop and on_order == 0.0:
-            qty_order = max(order_qty, 1.0)
+        rop_t = float(dynamic_rop[t]) if dynamic_rop is not None else rop
+        if inventory_position <= rop_t and on_order == 0.0:
+            qty_t = float(dynamic_order_qty[t]) if dynamic_order_qty is not None else order_qty
+            qty_order = max(qty_t, 1.0)
             arrival_day = t + lead_time
             pipeline.append((arrival_day, qty_order))
             on_order += qty_order
@@ -129,6 +143,8 @@ def run_simulation_for_item(
     holding_cost_per_unit_per_day: float,
     ordering_cost: float,
     shortage_cost_per_unit: float,
+    dynamic_rop: Optional[np.ndarray] = None,
+    dynamic_order_qty: Optional[np.ndarray] = None,
 ) -> Dict[str, float]:
     """Chạy mô phỏng cho 1 SKU trong 1 fold và tính toán tất cả chỉ số.
 
@@ -146,6 +162,8 @@ def run_simulation_for_item(
         order_qty=order_qty,
         lead_time=lead_time,
         initial_inventory=initial_inventory,
+        dynamic_rop=dynamic_rop,
+        dynamic_order_qty=dynamic_order_qty,
     )
 
     T = len(actual_demand)
@@ -157,7 +175,10 @@ def run_simulation_for_item(
     total_cost = holding + ordering + shortage
 
     fill_rate = calc_fill_rate(result["units_sold"], actual_demand)
-    days_stockout = int(np.sum(result["inventory_end"] == 0.0))
+    # Stockout = ngày có nhu cầu KHÔNG được đáp ứng (units_short > 0).
+    # Không dùng inventory_end == 0 vì một ngày có thể hết sạch hàng mà vẫn
+    # bán đủ nhu cầu, hoặc ngược lại.
+    days_stockout = int(np.sum(result["units_short"] > 0.0))
     stockout_rate = calc_stockout_rate(days_stockout, T)
 
     return {
@@ -169,12 +190,15 @@ def run_simulation_for_item(
         "cost_total": round(total_cost, 4),
         "fill_rate": round(fill_rate, 4),
         "stockout_rate": round(stockout_rate, 4),
+        "days_stockout": days_stockout,
         "num_orders": num_orders,
         "total_demand": round(float(np.sum(actual_demand)), 2),
         "total_sold": round(float(np.sum(result["units_sold"])), 2),
         "total_short": round(float(np.sum(result["units_short"])), 2),
         "avg_inventory": round(float(np.mean(result["inventory_end"])), 4),
-        "rop_used": round(rop, 4),
-        "order_qty_used": round(order_qty, 4),
+        "rop_used": round(float(np.mean(dynamic_rop)) if dynamic_rop is not None else rop, 4),
+        "order_qty_used": round(
+            float(np.mean(dynamic_order_qty)) if dynamic_order_qty is not None else order_qty, 4
+        ),
         "initial_inventory": round(initial_inventory, 4),
     }

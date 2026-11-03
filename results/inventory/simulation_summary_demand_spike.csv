@@ -1,14 +1,12 @@
-model,policy,scenario,cost_holding,cost_ordering,cost_shortage,cost_total,fill_rate,stockout_rate,num_orders,total_demand,total_short,count
-Chronos2_Covariates,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
-Chronos2_History,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
-Chronos_Bolt,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
-LightGBM,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
-MovingAverage,baseline,demand_spike,21536.01,13190.0,55450.62,90176.63,0.7322,0.2404,2638,106874.0,27725.3,780
-LightGBM,point_forecast,demand_spike,14992.27,13745.0,66587.45,95324.72,0.7278,0.2373,2749,106874.0,33293.72,780
-MovingAverage,point_forecast,demand_spike,17169.95,13845.0,65549.52,96564.46,0.7121,0.2723,2769,106874.0,32774.75,780
-Chronos2_Covariates,point_forecast,demand_spike,10167.03,15055.0,87224.33,112446.37,0.4276,0.4704,3011,106874.0,43612.16,780
-Chronos2_History,point_forecast,demand_spike,10002.81,15060.0,88509.14,113571.95,0.4291,0.4662,3012,106874.0,44254.57,780
-Chronos_Bolt,point_forecast,demand_spike,9350.96,15120.0,92880.16,117351.12,0.4318,0.4764,3024,106874.0,46440.04,780
-Chronos2_Covariates,quantile_forecast,demand_spike,10557.95,14605.0,86325.98,111488.93,0.4292,0.4631,2921,106874.0,43163.0,780
-Chronos2_History,quantile_forecast,demand_spike,10467.91,14660.0,86530.72,111658.63,0.4315,0.4597,2932,106874.0,43265.37,780
-Chronos_Bolt,quantile_forecast,demand_spike,9898.66,14690.0,90418.39,115007.05,0.4335,0.4717,2938,106874.0,45209.18,780
+model,policy,scenario,fill_rate_pooled,fill_rate_mean_per_sku_fold,stockout_rate,cost_holding,cost_ordering,cost_shortage,cost_total,num_orders,total_demand,total_sold,total_short,count
+Baseline,baseline,demand_spike,0.6836,0.7072,0.1653,672.37,13285.0,67623.96,81581.33,2657,106874.0,73062.12,33811.88,780
+Baseline_full_history,baseline_full_history,demand_spike,0.7272,0.7265,0.163,843.06,13340.0,58303.43,72486.48,2668,106874.0,77722.34,29151.64,780
+"Oracle (lower bound, not a model)",oracle_reference,demand_spike,0.8601,0.8732,0.0689,1143.65,7150.0,29903.0,38196.65,1430,106874.0,91922.5,14951.5,780
+MovingAverage,point_forecast,demand_spike,0.6933,0.7121,0.1605,697.78,13845.0,65549.5,80092.28,2769,106874.0,74099.25,32774.75,780
+LightGBM,point_forecast,demand_spike,0.6911,0.7256,0.1598,622.55,13740.0,66036.45,80399.0,2748,106874.0,73855.78,33018.23,780
+Chronos2_Covariates,point_forecast,demand_spike,0.6236,0.5012,0.2569,476.19,14740.0,80444.4,95660.59,2948,106874.0,66651.72,40222.27,780
+Chronos2_History,point_forecast,demand_spike,0.6171,0.5027,0.2554,467.91,14780.0,81844.24,97092.15,2956,106874.0,65951.82,40922.18,780
+Chronos_Bolt,point_forecast,demand_spike,0.5978,0.51,0.2563,447.74,14865.0,85959.7,101272.44,2973,106874.0,63894.15,42979.85,780
+Chronos2_Covariates,quantile_forecast,demand_spike,0.5962,0.4837,0.2623,440.99,13625.0,86311.83,100377.83,2725,106874.0,63717.99,43156.0,780
+Chronos2_History,quantile_forecast,demand_spike,0.5862,0.484,0.2626,429.7,13660.0,88447.47,102537.18,2732,106874.0,62650.24,44223.76,780
+Chronos_Bolt,quantile_forecast,demand_spike,0.5741,0.4885,0.2625,416.5,13560.0,91028.17,105004.67,2712,106874.0,61359.88,45514.12,780

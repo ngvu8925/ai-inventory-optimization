@@ -1,7 +1,10 @@
 # ============================================================
 # assumptions.yaml — Giả định tồn kho cho Phase 5
 # Tất cả tham số chi phí và vận hành đặt ở đây, KHÔNG hard-code trong code.
-# Đây là số minh họa đã được nhóm thống nhất. Ghi rõ biện minh bên dưới.
+# ⚠ ĐÂY LÀ GIẢ ĐỊNH TẠM, CHƯA ĐƯỢC NHÓM DUYỆT.
+#    Mọi giá trị dưới đây do nhóm phát triển đề xuất để chạy thử;
+#    chưa có biên bản/thống nhất chính thức. Cần nhóm xác nhận trước khi
+#    dùng cho báo cáo cuối.
 # ============================================================
 
 # --- Lead time ---
@@ -15,9 +18,16 @@ ordering_cost: 5.0
 # Chi phí cố định mỗi lần đặt hàng (ký hiệu K). Bao gồm xử lý đơn + vận chuyển.
 # Đơn vị: tiền tệ tùy ý (giống đơn vị sell_price).
 
-holding_cost_per_unit_per_day: 0.05
+holding_cost_per_unit_per_day: 0.002032
 # Chi phí lưu kho mỗi đơn vị mỗi ngày (ký hiệu h).
-# Khoảng 1–2% giá bán/tháng → ≈ 0.05/unit/day với giá trung bình ~$3.
+# ⚠ GIẢ ĐỊNH TẠM, CHƯA ĐƯỢC NHÓM DUYỆT (mức B, 1,5%/tháng).
+# Cách tính:
+#   giá bán trung bình 60 SKU (data/processed/sales_daily.parquet) = 4,064
+#   h = (1,5%/tháng) × 4,064 / 30 ngày = 0,002032 /đơn vị/ngày
+#   tương đương 18%/năm tính trên giá bán (chưa dùng giá vốn/COGS).
+# Ba mức tham chiếu đã báo cáo: A = 0,001355 (1,0%/tháng),
+#   B = 0,002032 (1,5%/tháng), C = 0,002709 (2,0%/tháng).
+# Lưu ý: đây là giả định tạm để chạy thử, cần nhóm chốt lại trước báo cáo cuối.
 
 shortage_cost_per_unit: 2.0
 # Chi phí thiếu hàng mỗi đơn vị không đáp ứng được (ký hiệu p).
@@ -26,19 +36,28 @@ shortage_cost_per_unit: 2.0
 # --- Mức dịch vụ & Safety Stock ---
 service_level: 0.95
 # Xác suất không thiếu hàng trong chu kỳ bổ sung (cycle service level).
-# z = 1.645 ứng với service_level = 0.95 (phân phối chuẩn 1 phía).
-z_score: 1.645
-# Giá trị z tương ứng service_level. Cố định để tái lập kết quả.
-# Nếu muốn thay service_level, phải cập nhật z_score đồng bộ.
+# z được TÍNH TỰ ĐỘNG từ service_level bằng phân phối chuẩn tắc
+# (xem src/inventory/policies.py: z_from_service_level), KHÔNG hard-code.
+# Ví dụ: 0.90 → z≈1.2816; 0.95 → z≈1.6449; 0.99 → z≈2.3263.
+
+# --- Cửa sổ ước lượng baseline ---
+baseline_window_days: 91
+# Baseline chính dùng trung bình & độ lệch chuẩn của bao nhiêu ngày gần nhất
+# trước origin. Chỉ dùng dữ liệu đến origin của từng fold.
+# Biến thể đối chiếu Baseline_full_history dùng toàn bộ lịch sử (không cắt).
 
 # --- Chính sách đặt hàng ---
 reorder_quantity_days: 14
-# Lượng đặt hàng = nhu cầu dự báo trong bao nhiêu ngày (order-up-to horizon).
+# Lượng đặt hàng = kỳ vọng nhu cầu trong bao nhiêu ngày (order cycle).
 # Mặc định 14 ngày: đặt bổ sung tương đương 2 tuần cầu dự báo.
 
 initial_inventory_days: 7
-# Tồn kho ban đầu tại fold 0 = nhu cầu dự báo trong bao nhiêu ngày.
-# Không đặt về 0 để tránh thiếu hàng ngay lúc bắt đầu mô phỏng.
+# Tồn kho ban đầu = nhu cầu trung bình × số ngày này.
+# Giống nhau cho MỌI chính sách, chỉ dùng nhu cầu thực trước origin.
+
+initial_inventory_lookback_days: 28
+# Số ngày gần nhất trước origin dùng để ước lượng nhu cầu trung bình
+# khi tính tồn kho ban đầu (không dùng dự báo).
 
 # --- Kịch bản Stress-test ---
 stress:

@@ -1,13 +1,19 @@
 """Pipeline chạy mô phỏng tồn kho cho tất cả SKU, fold, và chính sách — Phase 5.
 
-Đọc dự báo từ results/predictions/, áp dụng 3 chính sách tồn kho,
+Đọc dự báo từ results/predictions/, áp dụng các chính sách tồn kho,
 mô phỏng theo ngày, và xuất bảng kết quả vào results/inventory/.
 
-Chạy: python src/inventory/run_simulation.py
+Cấu trúc nguồn chạy:
+  - Baseline / Baseline_full_history: chạy MỘT LẦN, không phụ thuộc mô hình.
+  - Mỗi mô hình dự báo (LightGBM, MovingAverage, 3 biến thể Chronos):
+    chạy point_forecast, và quantile_forecast nếu có q_0.1/q_0.9.
+
+Chạy: python src/inventory/run_simulation.py [--stress none|demand_spike|lead_time_extended]
 """
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 project_root = Path(__file__).resolve().parents[2]
 if str(project_root) not in sys.path:
@@ -15,17 +21,21 @@ if str(project_root) not in sys.path:
 
 import numpy as np
 import pandas as pd
-import yaml
 
 from src.data.loader import load_processed_daily
 from src.forecasting.backtest import load_backtest_config, get_sku_zero_tiers
 from src.forecasting.features import _ensure_d_num
-from src.inventory.policies import load_assumptions, compute_policy_params
+from src.inventory.policies import (
+    build_oracle_paths,
+    calc_initial_inventory,
+    compute_policy_params,
+    load_assumptions,
+)
 from src.inventory.simulator import run_simulation_for_item
 
 
-# Danh sách mô hình → file dự báo tương ứng
-# Thêm model mới vào đây khi cần, không sửa code khác.
+# Danh sách mô hình → file dự báo tương ứng.
+# Baseline KHÔNG nằm ở đây vì nó độc lập với mô hình (xem BASELINE_SOURCES).
 MODEL_FILES = {
     "MovingAverage":          "results/predictions/movingaverage_predictions.parquet",
     "LightGBM":               "results/predictions/lightgbm_predictions.parquet",
@@ -34,10 +44,18 @@ MODEL_FILES = {
     "Chronos_Bolt":           "results/predictions/chronos_bolt_predictions.parquet",
 }
 
-# Danh sách chính sách áp dụng cho từng mô hình
-# quantile_forecast chỉ áp dụng cho mô hình có cột q_0.9
-POLICIES_POINT = ["baseline", "point_forecast"]
-POLICIES_QUANTILE = ["baseline", "point_forecast", "quantile_forecast"]
+# Baseline chỉ xuất hiện MỘT LẦN cho mỗi biến thể, không lặp theo mô hình.
+BASELINE_SOURCES = [
+    ("Baseline", "baseline"),
+    ("Baseline_full_history", "baseline_full_history"),
+]
+
+# Oracle: tham chiếu cận dưới chi phí, KHÔNG phải mô hình dự báo.
+# Tên hiển thị ghi rõ để không bị đọc nhầm là một mô hình.
+ORACLE_SOURCE = ("Oracle (lower bound, not a model)", "oracle_reference")
+
+POLICIES_POINT = ["point_forecast"]
+POLICIES_QUANTILE = ["point_forecast", "quantile_forecast"]
 
 
 def load_forecast(model_name: str, pred_path: str) -> pd.DataFrame:
@@ -60,11 +78,18 @@ def run_all_simulations(
     backtest_cfg_path: str = "configs/backtest.yaml",
     daily_data_path: str = "data/processed/sales_daily.parquet",
     stress_scenario: str = "none",
+    overrides: Optional[dict] = None,
+    write_outputs: bool = True,
 ) -> pd.DataFrame:
-    """Chạy mô phỏng đầy đủ cho tất cả mô hình × chính sách × SKU × fold.
+    """Chạy mô phỏng đầy đủ cho tất cả nguồn × chính sách × SKU × fold.
 
     Args:
         stress_scenario: 'none', 'demand_spike', hoặc 'lead_time_extended'.
+        overrides: Dict ghi đè tham số trong assumptions.yaml (dùng cho ma
+            trận độ nhạy). Chỉ ghi đè các key top-level như
+            holding_cost_per_unit_per_day, shortage_cost_per_unit,
+            ordering_cost, service_level.
+        write_outputs: Nếu False, không ghi file CSV (dùng khi chạy ma trận).
 
     Returns:
         DataFrame tóm tắt kết quả toàn bộ.
@@ -72,6 +97,8 @@ def run_all_simulations(
     Path(out_dir).mkdir(parents=True, exist_ok=True)
 
     cfg = load_assumptions(cfg_path)
+    if overrides:
+        cfg = {**cfg, **overrides}
     backtest_cfg = load_backtest_config(backtest_cfg_path)
 
     horizon = int(backtest_cfg["horizon"])
@@ -98,36 +125,54 @@ def run_all_simulations(
     all_records = []
     scenario_label = stress_scenario if stress_scenario != "none" else "normal"
 
-    for model_name, pred_path in MODEL_FILES.items():
-        try:
-            forecast_df = load_forecast(model_name, pred_path)
-        except FileNotFoundError:
-            print(f"  [SKIP] {model_name}: file dự báo không tồn tại.")
-            continue
+    def _run_source(display_model: str, policy_name: str, forecast_df: pd.DataFrame | None) -> None:
+        """Chạy 1 nguồn (baseline hoặc model) cho toàn bộ fold × SKU."""
+        print(f"\n--- Nguồn: {display_model} | Chính sách: {policy_name} ---")
+        for fold_k in range(num_folds):
+            origin_day = initial_origin + fold_k * step_size
 
-        has_quantile = "q_0.9" in forecast_df.columns
-        policies = POLICIES_QUANTILE if has_quantile else POLICIES_POINT
+            # Lịch sử đến hết origin — dùng chung cho mọi chính sách
+            hist_df = daily_df[daily_df["d_num"] <= origin_day].copy()
 
-        print(f"\n--- Mô hình: {model_name} | Chính sách: {policies} ---")
-
-        for policy_name in policies:
-            for fold_k in range(num_folds):
-                origin_day = initial_origin + fold_k * step_size
-
-                # Lịch sử đến origin (toàn bộ, không cắt)
-                hist_df = daily_df[daily_df["d_num"] <= origin_day].copy()
-
-                # Dự báo của fold này
+            fold_fc = None
+            if forecast_df is not None:
                 fold_fc = forecast_df[forecast_df["fold"] == fold_k].copy()
                 if len(fold_fc) == 0:
                     print(f"    [SKIP] fold {fold_k}: không có dự báo.")
                     continue
 
-                for item_id in items:
-                    hist_item = hist_df[hist_df["item_id"] == item_id]["sales"].values.astype(float)
-                    if len(hist_item) == 0:
-                        continue
+            for item_id in items:
+                hist_item = hist_df[hist_df["item_id"] == item_id]["sales"].values.astype(float)
+                if len(hist_item) == 0:
+                    continue
 
+                # Nhu cầu thực trong fold (áp dụng stress nếu có)
+                actual_fold = (
+                    daily_df[
+                        (daily_df["d_num"] > origin_day) &
+                        (daily_df["d_num"] <= origin_day + horizon) &
+                        (daily_df["item_id"] == item_id)
+                    ].sort_values("d_num")["sales"].values.astype(float)
+                )
+                if len(actual_fold) == 0:
+                    continue
+                actual_fold = actual_fold * demand_spike  # stress hoặc 1.0
+
+                # Tồn kho ban đầu giống nhau cho MỌI chính sách:
+                # trung bình nhu cầu THỰC trước origin × initial_inventory_days.
+                init_inv = calc_initial_inventory(hist_item, cfg)
+
+                if policy_name == "oracle_reference":
+                    # Perfect foresight: dùng nhu cầu thực tương lai của fold.
+                    # Chỉ là cận dưới chi phí, không phải mô hình dự báo.
+                    rop_path, qty_path = build_oracle_paths(
+                        actual_fold,
+                        lead_time_days=lead_time,
+                        reorder_quantity_days=int(cfg["reorder_quantity_days"]),
+                    )
+                    rop_value, qty_value = 0.0, 0.0
+                    dynamic_rop, dynamic_qty = rop_path, qty_path
+                else:
                     try:
                         params = compute_policy_params(
                             item_id=item_id,
@@ -138,48 +183,60 @@ def run_all_simulations(
                             cfg=cfg,
                         )
                     except (ValueError, KeyError) as e:
-                        print(f"    [WARN] {model_name}/{policy_name}/fold{fold_k}/{item_id}: {e}")
+                        print(f"    [WARN] {display_model}/{policy_name}/fold{fold_k}/{item_id}: {e}")
                         continue
+                    rop_value, qty_value = params["rop"], params["order_qty"]
+                    dynamic_rop, dynamic_qty = None, None
 
-                    # Nhu cầu thực trong fold (áp dụng stress nếu có)
-                    actual_fold = (
-                        daily_df[
-                            (daily_df["d_num"] > origin_day) &
-                            (daily_df["d_num"] <= origin_day + horizon) &
-                            (daily_df["item_id"] == item_id)
-                        ].sort_values("d_num")["sales"].values.astype(float)
-                    )
-                    if len(actual_fold) == 0:
-                        continue
-                    actual_fold = actual_fold * demand_spike  # stress hoặc 1.0
+                sim = run_simulation_for_item(
+                    item_id=item_id,
+                    fold=fold_k,
+                    actual_demand=actual_fold,
+                    rop=rop_value,
+                    order_qty=qty_value,
+                    lead_time=lead_time,
+                    initial_inventory=init_inv,
+                    holding_cost_per_unit_per_day=float(cfg["holding_cost_per_unit_per_day"]),
+                    ordering_cost=float(cfg["ordering_cost"]),
+                    shortage_cost_per_unit=float(cfg["shortage_cost_per_unit"]),
+                    dynamic_rop=dynamic_rop,
+                    dynamic_order_qty=dynamic_qty,
+                )
 
-                    # Tồn kho ban đầu = d_bar * initial_inventory_days
-                    d_bar = params["d_bar"]
-                    init_inv = d_bar * float(cfg["initial_inventory_days"])
-                    init_inv = max(init_inv, 0.0)
+                sim["model"] = display_model
+                sim["policy"] = policy_name
+                sim["scenario"] = scenario_label
+                sim["zero_tier"] = zero_tiers.get(item_id, "unknown")
+                all_records.append(sim)
 
-                    sim = run_simulation_for_item(
-                        item_id=item_id,
-                        fold=fold_k,
-                        actual_demand=actual_fold,
-                        rop=params["rop"],
-                        order_qty=params["order_qty"],
-                        lead_time=lead_time,
-                        initial_inventory=init_inv,
-                        holding_cost_per_unit_per_day=float(cfg["holding_cost_per_unit_per_day"]),
-                        ordering_cost=float(cfg["ordering_cost"]),
-                        shortage_cost_per_unit=float(cfg["shortage_cost_per_unit"]),
-                    )
+    # 1) Baseline: chạy một lần, độc lập với mô hình dự báo
+    for display_name, policy_name in BASELINE_SOURCES:
+        _run_source(display_name, policy_name, forecast_df=None)
 
-                    sim["model"] = model_name
-                    sim["policy"] = policy_name
-                    sim["scenario"] = scenario_label
-                    sim["zero_tier"] = zero_tiers.get(item_id, "unknown")
-                    all_records.append(sim)
+    # 2) Các mô hình dự báo
+    for model_name, pred_path in MODEL_FILES.items():
+        try:
+            forecast_df = load_forecast(model_name, pred_path)
+        except FileNotFoundError:
+            print(f"  [SKIP] {model_name}: file dự báo không tồn tại.")
+            continue
+
+        has_quantile = {"q_0.1", "q_0.9"}.issubset(forecast_df.columns)
+        policies = POLICIES_QUANTILE if has_quantile else POLICIES_POINT
+
+        for policy_name in policies:
+            _run_source(model_name, policy_name, forecast_df)
+
+    # 3) Oracle: tham chiếu cận dưới chi phí (perfect foresight), không phải mô hình
+    _run_source(ORACLE_SOURCE[0], ORACLE_SOURCE[1], forecast_df=None)
 
     results_df = pd.DataFrame(all_records)
     if len(results_df) == 0:
         print("CẢNH BÁO: Không có kết quả nào được tạo ra!")
+        return results_df
+
+    summary = _summarize_results(results_df)
+    if not write_outputs:
         return results_df
 
     # Lưu kết quả chi tiết theo từng SKU và fold
@@ -187,8 +244,7 @@ def run_all_simulations(
     results_df.to_csv(detail_path, index=False)
     print(f"\nĐã lưu {len(results_df):,} dòng chi tiết → {detail_path}")
 
-    # Tóm tắt theo mô hình × chính sách
-    summary = _summarize_results(results_df)
+    # Tóm tắt theo nguồn × chính sách
     summary_path = Path(out_dir) / f"simulation_summary_{scenario_label}.csv"
     summary.to_csv(summary_path, index=False)
     print(f"Đã lưu bảng tóm tắt → {summary_path}")
@@ -203,7 +259,15 @@ def run_all_simulations(
 
 
 def _summarize_results(df: pd.DataFrame) -> pd.DataFrame:
-    """Tóm tắt tổng hợp theo mô hình × chính sách × kịch bản."""
+    """Tóm tắt tổng hợp theo nguồn × chính sách × kịch bản.
+
+    Chỉ số chính:
+      - fill_rate_pooled = 1 - sum(total_short) / sum(total_demand)
+        (đúng định nghĩa tổng đơn vị đáp ứng / tổng nhu cầu)
+    Chỉ số phụ:
+      - fill_rate_mean_per_sku_fold = trung bình cộng fill rate của từng
+        SKU×fold (giữ lại để đối chiếu, KHÔNG dùng làm chỉ số chính).
+    """
     agg = (
         df.groupby(["model", "policy", "scenario"])
         .agg(
@@ -211,39 +275,69 @@ def _summarize_results(df: pd.DataFrame) -> pd.DataFrame:
             cost_ordering=("cost_ordering", "sum"),
             cost_shortage=("cost_shortage", "sum"),
             cost_total=("cost_total", "sum"),
-            fill_rate=("fill_rate", "mean"),
+            fill_rate_mean_per_sku_fold=("fill_rate", "mean"),
             stockout_rate=("stockout_rate", "mean"),
             num_orders=("num_orders", "sum"),
             total_demand=("total_demand", "sum"),
+            total_sold=("total_sold", "sum"),
             total_short=("total_short", "sum"),
             count=("item_id", "count"),
         )
         .reset_index()
     )
-    # Làm tròn
-    for col in ["cost_holding", "cost_ordering", "cost_shortage", "cost_total", "total_demand", "total_short"]:
+
+    # Fill rate gộp: tổng đơn vị bán được / tổng nhu cầu
+    demand = agg["total_demand"].to_numpy(dtype=float)
+    short = agg["total_short"].to_numpy(dtype=float)
+    agg["fill_rate_pooled"] = np.where(demand > 0, 1.0 - short / demand, 1.0)
+
+    for col in ["cost_holding", "cost_ordering", "cost_shortage", "cost_total",
+                "total_demand", "total_sold", "total_short"]:
         agg[col] = agg[col].round(2)
-    agg["fill_rate"] = agg["fill_rate"].round(4)
+    agg["fill_rate_pooled"] = agg["fill_rate_pooled"].round(4)
+    agg["fill_rate_mean_per_sku_fold"] = agg["fill_rate_mean_per_sku_fold"].round(4)
     agg["stockout_rate"] = agg["stockout_rate"].round(4)
-    return agg.sort_values(["scenario", "policy", "cost_total"])
+
+    cols = [
+        "model", "policy", "scenario",
+        "fill_rate_pooled", "fill_rate_mean_per_sku_fold", "stockout_rate",
+        "cost_holding", "cost_ordering", "cost_shortage", "cost_total",
+        "num_orders", "total_demand", "total_sold", "total_short", "count",
+    ]
+    return agg[cols].sort_values(["scenario", "policy", "cost_total"])
 
 
 def _summarize_by_tier(df: pd.DataFrame) -> pd.DataFrame:
-    """Tóm tắt theo mô hình × chính sách × zero_tier."""
+    """Tóm tắt theo nguồn × chính sách × zero_tier."""
     agg = (
         df.groupby(["model", "policy", "scenario", "zero_tier"])
         .agg(
             cost_total=("cost_total", "sum"),
-            fill_rate=("fill_rate", "mean"),
+            fill_rate_mean_per_sku_fold=("fill_rate", "mean"),
             stockout_rate=("stockout_rate", "mean"),
+            total_demand=("total_demand", "sum"),
+            total_sold=("total_sold", "sum"),
+            total_short=("total_short", "sum"),
             count=("item_id", "count"),
         )
         .reset_index()
     )
-    agg["cost_total"] = agg["cost_total"].round(2)
-    agg["fill_rate"] = agg["fill_rate"].round(4)
+    demand = agg["total_demand"].to_numpy(dtype=float)
+    short = agg["total_short"].to_numpy(dtype=float)
+    agg["fill_rate_pooled"] = np.where(demand > 0, 1.0 - short / demand, 1.0)
+
+    for col in ["cost_total", "total_demand", "total_sold", "total_short"]:
+        agg[col] = agg[col].round(2)
+    agg["fill_rate_pooled"] = agg["fill_rate_pooled"].round(4)
+    agg["fill_rate_mean_per_sku_fold"] = agg["fill_rate_mean_per_sku_fold"].round(4)
     agg["stockout_rate"] = agg["stockout_rate"].round(4)
-    return agg.sort_values(["scenario", "zero_tier", "policy", "cost_total"])
+
+    cols = [
+        "model", "policy", "scenario", "zero_tier",
+        "fill_rate_pooled", "fill_rate_mean_per_sku_fold", "stockout_rate",
+        "cost_total", "total_demand", "total_sold", "total_short", "count",
+    ]
+    return agg[cols].sort_values(["scenario", "zero_tier", "policy", "cost_total"])
 
 
 if __name__ == "__main__":
