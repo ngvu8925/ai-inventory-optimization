@@ -1,0 +1,133 @@
+model,policy,scenario,fill_rate_pooled,fill_rate_mean_per_sku_fold,stockout_rate,cost_holding,cost_ordering,cost_shortage,cost_total,num_orders,total_demand,total_sold,total_short,count,parameter,parameter_label,value,base_value,is_base_config,rank_cost,run_seconds
+Baseline,baseline,normal,0.9307,0.9096,0.0444,681.59,10700.0,7409.15,18790.74,2140,53437.0,49732.43,3704.57,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,3,139.68
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,828.66,10830.0,7110.37,18769.03,2166,53437.0,49881.85,3555.14,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,2,139.68
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,419.75,6740.0,5476.0,12635.75,1348,53437.0,50699.0,2738.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,1,139.68
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,666.13,11270.0,8616.32,20552.45,2254,53437.0,49128.84,4308.16,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,4,139.68
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,713.03,11475.0,10790.0,22978.02,2295,53437.0,48042.0,5395.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,5,139.68
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,531.55,13675.0,13595.39,27801.94,2735,53437.0,46639.28,6797.72,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,7,139.68
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,519.34,13635.0,14465.28,28619.62,2727,53437.0,46204.33,7232.67,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,9,139.68
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,504.2,13835.0,15235.98,29575.17,2767,53437.0,45819.05,7617.95,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,11,139.68
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,480.3,12430.0,14862.06,27772.36,2486,53437.0,46005.96,7431.04,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,6,139.68
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,473.59,12415.0,15433.87,28322.46,2483,53437.0,45720.05,7716.94,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,8,139.68
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,462.64,12380.0,16292.96,29135.6,2476,53437.0,45290.53,8146.47,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,10,139.68
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,7409.15,19131.28,2140,53437.0,49732.43,3704.57,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,2,153.51
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,7110.37,19183.06,2166,53437.0,49881.85,3555.14,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,3,153.51
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,1,153.51
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,8616.32,20885.27,2254,53437.0,49128.84,4308.16,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,4,153.51
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,10790.0,23334.27,2295,53437.0,48042.0,5395.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,5,153.51
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,13595.39,28067.52,2735,53437.0,46639.28,6797.72,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,7,153.51
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,14465.28,28879.1,2727,53437.0,46204.33,7232.67,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,9,153.51
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,15235.98,29827.08,2767,53437.0,45819.05,7617.95,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,11,153.51
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,14862.06,28012.33,2486,53437.0,46005.96,7431.04,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,6,153.51
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,15433.87,28559.08,2483,53437.0,45720.05,7716.94,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,8,153.51
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,16292.96,29366.75,2476,53437.0,45290.53,8146.47,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,10,153.51
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1362.67,10700.0,7409.15,19471.82,2140,53437.0,49732.43,3704.57,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,2,130.29
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1656.72,10830.0,7110.37,19597.09,2166,53437.0,49881.85,3555.14,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,3,130.29
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,839.18,6740.0,5476.0,13055.18,1348,53437.0,50699.0,2738.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,1,130.29
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,1331.78,11270.0,8616.32,21218.1,2254,53437.0,49128.84,4308.16,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,4,130.29
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1425.52,11475.0,10790.0,23690.52,2295,53437.0,48042.0,5395.0,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,5,130.29
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,1062.72,13675.0,13595.39,28333.11,2735,53437.0,46639.28,6797.72,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,7,130.29
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,1038.3,13635.0,14465.28,29138.58,2727,53437.0,46204.33,7232.67,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,9,130.29
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,1008.02,13835.0,15235.98,30079.0,2767,53437.0,45819.05,7617.95,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,11,130.29
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,960.24,12430.0,14862.06,28252.3,2486,53437.0,46005.96,7431.04,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,6,130.29
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,946.82,12415.0,15433.87,28795.69,2483,53437.0,45720.05,7716.94,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,8,130.29
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,924.94,12380.0,16292.96,29597.9,2476,53437.0,45290.53,8146.47,780,holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,10,130.29
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,3704.58,15426.7,2140,53437.0,49732.43,3704.57,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,2,176.35
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,3555.18,15627.88,2166,53437.0,49881.85,3555.14,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,3,176.35
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,2738.0,10107.47,1348,53437.0,50699.0,2738.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,1,176.35
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,4308.16,16577.11,2254,53437.0,49128.84,4308.16,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,4,176.35
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,5395.0,17939.27,2295,53437.0,48042.0,5395.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,5,176.35
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,6797.7,21269.83,2735,53437.0,46639.28,6797.72,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,9,176.35
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,7232.64,21646.46,2727,53437.0,46204.33,7232.67,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,10,176.35
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,7617.99,22209.1,2767,53437.0,45819.05,7617.95,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,11,176.35
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,7431.03,20581.3,2486,53437.0,46005.96,7431.04,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,6,176.35
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,7716.94,20842.14,2483,53437.0,45720.05,7716.94,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,7,176.35
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,8146.48,21220.27,2476,53437.0,45290.53,8146.47,780,shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,8,176.35
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,7409.15,19131.28,2140,53437.0,49732.43,3704.57,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,2,102.48
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,7110.37,19183.06,2166,53437.0,49881.85,3555.14,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,3,102.48
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,1,102.48
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,8616.32,20885.27,2254,53437.0,49128.84,4308.16,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,4,102.48
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,10790.0,23334.27,2295,53437.0,48042.0,5395.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,5,102.48
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,13595.39,28067.52,2735,53437.0,46639.28,6797.72,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,7,102.48
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,14465.28,28879.1,2727,53437.0,46204.33,7232.67,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,9,102.48
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,15235.98,29827.08,2767,53437.0,45819.05,7617.95,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,11,102.48
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,14862.06,28012.33,2486,53437.0,46005.96,7431.04,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,6,102.48
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,15433.87,28559.08,2483,53437.0,45720.05,7716.94,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,8,102.48
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,16292.96,29366.75,2476,53437.0,45290.53,8146.47,780,shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,10,102.48
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,14818.31,26540.43,2140,53437.0,49732.43,3704.57,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,3,96.51
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,14220.74,26293.43,2166,53437.0,49881.85,3555.14,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,2,96.51
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,10952.0,18321.47,1348,53437.0,50699.0,2738.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,1,96.51
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,17232.64,29501.59,2254,53437.0,49128.84,4308.16,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,4,96.51
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,21580.0,34124.27,2295,53437.0,48042.0,5395.0,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,5,96.51
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,27190.79,41662.92,2735,53437.0,46639.28,6797.72,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,6,96.51
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,28930.57,43344.39,2727,53437.0,46204.33,7232.67,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,8,96.51
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,30471.96,45063.06,2767,53437.0,45819.05,7617.95,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,10,96.51
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,29724.13,42874.39,2486,53437.0,46005.96,7431.04,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,7,96.51
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,30867.75,43992.95,2483,53437.0,45720.05,7716.94,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,9,96.51
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,32585.91,45659.7,2476,53437.0,45290.53,8146.47,780,shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,11,96.51
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,5350.0,7409.15,13781.28,2140,53437.0,49732.43,3704.57,780,ordering_cost,ordering_cost (K),2.5,5.0,False,3,132.06
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,5415.0,7110.37,13768.06,2166,53437.0,49881.85,3555.14,780,ordering_cost,ordering_cost (K),2.5,5.0,False,2,132.06
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,3370.0,5476.0,9475.47,1348,53437.0,50699.0,2738.0,780,ordering_cost,ordering_cost (K),2.5,5.0,False,1,132.06
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,5635.0,8616.32,15250.27,2254,53437.0,49128.84,4308.16,780,ordering_cost,ordering_cost (K),2.5,5.0,False,4,132.06
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,5737.5,10790.0,17596.77,2295,53437.0,48042.0,5395.0,780,ordering_cost,ordering_cost (K),2.5,5.0,False,5,132.06
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,6837.5,13595.39,21230.02,2735,53437.0,46639.28,6797.72,780,ordering_cost,ordering_cost (K),2.5,5.0,False,6,132.06
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,6817.5,14465.28,22061.6,2727,53437.0,46204.33,7232.67,780,ordering_cost,ordering_cost (K),2.5,5.0,False,8,132.06
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,6917.5,15235.98,22909.58,2767,53437.0,45819.05,7617.95,780,ordering_cost,ordering_cost (K),2.5,5.0,False,10,132.06
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,6215.0,14862.06,21797.33,2486,53437.0,46005.96,7431.04,780,ordering_cost,ordering_cost (K),2.5,5.0,False,7,132.06
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,6207.5,15433.87,22351.58,2483,53437.0,45720.05,7716.94,780,ordering_cost,ordering_cost (K),2.5,5.0,False,9,132.06
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,6190.0,16292.96,23176.75,2476,53437.0,45290.53,8146.47,780,ordering_cost,ordering_cost (K),2.5,5.0,False,11,132.06
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,7409.15,19131.28,2140,53437.0,49732.43,3704.57,780,ordering_cost,ordering_cost (K),5.0,5.0,True,2,136.43
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,7110.37,19183.06,2166,53437.0,49881.85,3555.14,780,ordering_cost,ordering_cost (K),5.0,5.0,True,3,136.43
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,ordering_cost,ordering_cost (K),5.0,5.0,True,1,136.43
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,8616.32,20885.27,2254,53437.0,49128.84,4308.16,780,ordering_cost,ordering_cost (K),5.0,5.0,True,4,136.43
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,10790.0,23334.27,2295,53437.0,48042.0,5395.0,780,ordering_cost,ordering_cost (K),5.0,5.0,True,5,136.43
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,13595.39,28067.52,2735,53437.0,46639.28,6797.72,780,ordering_cost,ordering_cost (K),5.0,5.0,True,7,136.43
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,14465.28,28879.1,2727,53437.0,46204.33,7232.67,780,ordering_cost,ordering_cost (K),5.0,5.0,True,9,136.43
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,15235.98,29827.08,2767,53437.0,45819.05,7617.95,780,ordering_cost,ordering_cost (K),5.0,5.0,True,11,136.43
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,14862.06,28012.33,2486,53437.0,46005.96,7431.04,780,ordering_cost,ordering_cost (K),5.0,5.0,True,6,136.43
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,15433.87,28559.08,2483,53437.0,45720.05,7716.94,780,ordering_cost,ordering_cost (K),5.0,5.0,True,8,136.43
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,16292.96,29366.75,2476,53437.0,45290.53,8146.47,780,ordering_cost,ordering_cost (K),5.0,5.0,True,10,136.43
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,21400.0,7409.15,29831.28,2140,53437.0,49732.43,3704.57,780,ordering_cost,ordering_cost (K),10.0,5.0,False,2,137.11
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,21660.0,7110.37,30013.06,2166,53437.0,49881.85,3555.14,780,ordering_cost,ordering_cost (K),10.0,5.0,False,3,137.11
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,13480.0,5476.0,19585.47,1348,53437.0,50699.0,2738.0,780,ordering_cost,ordering_cost (K),10.0,5.0,False,1,137.11
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,22540.0,8616.32,32155.27,2254,53437.0,49128.84,4308.16,780,ordering_cost,ordering_cost (K),10.0,5.0,False,4,137.11
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,22950.0,10790.0,34809.27,2295,53437.0,48042.0,5395.0,780,ordering_cost,ordering_cost (K),10.0,5.0,False,5,137.11
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,27350.0,13595.39,41742.52,2735,53437.0,46639.28,6797.72,780,ordering_cost,ordering_cost (K),10.0,5.0,False,8,137.11
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,27270.0,14465.28,42514.1,2727,53437.0,46204.33,7232.67,780,ordering_cost,ordering_cost (K),10.0,5.0,False,10,137.11
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,27670.0,15235.98,43662.08,2767,53437.0,45819.05,7617.95,780,ordering_cost,ordering_cost (K),10.0,5.0,False,11,137.11
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,24860.0,14862.06,40442.33,2486,53437.0,46005.96,7431.04,780,ordering_cost,ordering_cost (K),10.0,5.0,False,6,137.11
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,24830.0,15433.87,40974.08,2483,53437.0,45720.05,7716.94,780,ordering_cost,ordering_cost (K),10.0,5.0,False,7,137.11
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,24760.0,16292.96,41746.75,2476,53437.0,45290.53,8146.47,780,ordering_cost,ordering_cost (K),10.0,5.0,False,9,137.11
+Baseline,baseline,normal,0.9264,0.9035,0.0482,970.18,10300.0,7867.5,19137.68,2060,53437.0,49503.25,3933.75,780,service_level,service_level,0.9,0.95,False,2,117.6
+Baseline_full_history,baseline_full_history,normal,0.927,0.9143,0.0483,1175.72,10320.0,7802.83,19298.55,2064,53437.0,49535.58,3901.41,780,service_level,service_level,0.9,0.95,False,3,117.6
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,service_level,service_level,0.9,0.95,False,1,117.6
+LightGBM,point_forecast,normal,0.913,0.9125,0.0445,940.92,10705.0,9293.9,20939.82,2141,53437.0,48790.06,4646.94,780,service_level,service_level,0.9,0.95,False,4,117.6
+MovingAverage,point_forecast,normal,0.8974,0.8983,0.0481,1018.49,10820.0,10963.5,22801.99,2164,53437.0,47955.25,5481.75,780,service_level,service_level,0.9,0.95,False,5,117.6
+Chronos2_Covariates,point_forecast,normal,0.8668,0.7287,0.1228,754.76,13105.0,14236.23,28095.99,2621,53437.0,46318.84,7118.16,780,service_level,service_level,0.9,0.95,False,6,117.6
+Chronos2_History,point_forecast,normal,0.8574,0.7291,0.123,740.01,13085.0,15243.1,29068.11,2617,53437.0,45815.45,7621.56,780,service_level,service_level,0.9,0.95,False,8,117.6
+Chronos_Bolt,point_forecast,normal,0.8472,0.7539,0.1174,715.01,13260.0,16325.39,30300.4,2652,53437.0,45274.31,8162.69,780,service_level,service_level,0.9,0.95,False,11,117.6
+Chronos2_Covariates,quantile_forecast,normal,0.8532,0.7068,0.1287,693.23,12050.0,15689.82,28433.06,2410,53437.0,45592.05,7844.95,780,service_level,service_level,0.9,0.95,False,7,117.6
+Chronos2_History,quantile_forecast,normal,0.8468,0.709,0.1288,681.44,12065.0,16377.16,29123.61,2413,53437.0,45248.42,8188.58,780,service_level,service_level,0.9,0.95,False,9,117.6
+Chronos_Bolt,quantile_forecast,normal,0.8383,0.7242,0.125,669.32,11995.0,17282.43,29946.75,2399,53437.0,44795.8,8641.2,780,service_level,service_level,0.9,0.95,False,10,117.6
+Baseline,baseline,normal,0.9307,0.9096,0.0444,1022.13,10700.0,7409.15,19131.28,2140,53437.0,49732.43,3704.57,780,service_level,service_level,0.95,0.95,True,2,102.96
+Baseline_full_history,baseline_full_history,normal,0.9335,0.9208,0.0432,1242.69,10830.0,7110.37,19183.06,2166,53437.0,49881.85,3555.14,780,service_level,service_level,0.95,0.95,True,3,102.96
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,service_level,service_level,0.95,0.95,True,1,102.96
+LightGBM,point_forecast,normal,0.9194,0.9179,0.0413,998.95,11270.0,8616.32,20885.27,2254,53437.0,49128.84,4308.16,780,service_level,service_level,0.95,0.95,True,4,102.96
+MovingAverage,point_forecast,normal,0.899,0.903,0.0464,1069.27,11475.0,10790.0,23334.27,2295,53437.0,48042.0,5395.0,780,service_level,service_level,0.95,0.95,True,5,102.96
+Chronos2_Covariates,point_forecast,normal,0.8728,0.7375,0.1193,797.13,13675.0,13595.39,28067.52,2735,53437.0,46639.28,6797.72,780,service_level,service_level,0.95,0.95,True,7,102.96
+Chronos2_History,point_forecast,normal,0.8647,0.7391,0.1186,778.82,13635.0,14465.28,28879.1,2727,53437.0,46204.33,7232.67,780,service_level,service_level,0.95,0.95,True,9,102.96
+Chronos_Bolt,point_forecast,normal,0.8574,0.7636,0.1121,756.11,13835.0,15235.98,29827.08,2767,53437.0,45819.05,7617.95,780,service_level,service_level,0.95,0.95,True,11,102.96
+Chronos2_Covariates,quantile_forecast,normal,0.8609,0.7163,0.1243,720.26,12430.0,14862.06,28012.33,2486,53437.0,46005.96,7431.04,780,service_level,service_level,0.95,0.95,True,6,102.96
+Chronos2_History,quantile_forecast,normal,0.8556,0.7195,0.1231,710.2,12415.0,15433.87,28559.08,2483,53437.0,45720.05,7716.94,780,service_level,service_level,0.95,0.95,True,8,102.96
+Chronos_Bolt,quantile_forecast,normal,0.8476,0.7367,0.119,693.79,12380.0,16292.96,29366.75,2476,53437.0,45290.53,8146.47,780,service_level,service_level,0.95,0.95,True,10,102.96
+Baseline,baseline,normal,0.9343,0.9142,0.0414,1116.75,11470.0,7024.65,19611.4,2294,53437.0,49924.7,3512.3,780,service_level,service_level,0.99,0.95,False,3,79.37
+Baseline_full_history,baseline_full_history,normal,0.9381,0.9244,0.0401,1379.77,11550.0,6619.97,19549.74,2310,53437.0,50127.03,3309.97,780,service_level,service_level,0.99,0.95,False,2,79.37
+"Oracle (lower bound, not a model)",oracle_reference,normal,0.9488,0.9419,0.0293,629.47,6740.0,5476.0,12845.47,1348,53437.0,50699.0,2738.0,780,service_level,service_level,0.99,0.95,False,1,79.37
+LightGBM,point_forecast,normal,0.9261,0.9203,0.0392,1117.93,11905.0,7895.01,20917.94,2381,53437.0,49489.5,3947.5,780,service_level,service_level,0.99,0.95,False,4,79.37
+MovingAverage,point_forecast,normal,0.9042,0.9051,0.0448,1185.42,12030.0,10235.5,23450.92,2406,53437.0,48319.25,5117.75,780,service_level,service_level,0.99,0.95,False,5,79.37
+Chronos2_Covariates,point_forecast,normal,0.879,0.7455,0.1149,880.16,14150.0,12933.09,27963.25,2830,53437.0,46970.44,6466.56,780,service_level,service_level,0.99,0.95,False,7,79.37
+Chronos2_History,point_forecast,normal,0.8707,0.747,0.1146,874.3,14175.0,13814.62,28863.92,2835,53437.0,46529.67,6907.33,780,service_level,service_level,0.99,0.95,False,9,79.37
+Chronos_Bolt,point_forecast,normal,0.8635,0.7725,0.1078,839.48,14355.0,14593.62,29788.1,2871,53437.0,46140.22,7296.78,780,service_level,service_level,0.99,0.95,False,11,79.37
+Chronos2_Covariates,quantile_forecast,normal,0.8702,0.7282,0.119,777.86,12900.0,13869.7,27547.56,2580,53437.0,46502.11,6934.89,780,service_level,service_level,0.99,0.95,False,6,79.37
+Chronos2_History,quantile_forecast,normal,0.8636,0.7297,0.1182,761.26,12935.0,14573.51,28269.77,2587,53437.0,46150.21,7286.78,780,service_level,service_level,0.99,0.95,False,8,79.37
+Chronos_Bolt,quantile_forecast,normal,0.8546,0.7499,0.1126,744.72,12950.0,15540.64,29235.36,2590,53437.0,45666.7,7770.3,780,service_level,service_level,0.99,0.95,False,10,79.37

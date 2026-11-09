@@ -1,0 +1,18 @@
+parameter,value,policy_a,policy_b,base_rank_a,base_rank_b,new_rank_a,new_rank_b,involves_oracle
+holding_cost_per_unit_per_day,0.001355,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+ordering_cost,2.5,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+ordering_cost,2.5,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
+ordering_cost,2.5,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
+ordering_cost,2.5,Chronos_Bolt | point_forecast,Chronos_Bolt | quantile_forecast,11,10,10,11,False
+ordering_cost,10.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,7,8,8,7,False
+ordering_cost,10.0,Chronos2_History | point_forecast,Chronos_Bolt | quantile_forecast,9,10,10,9,False
+service_level,0.9,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
+service_level,0.9,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
+service_level,0.99,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+shortage_cost_per_unit,1.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,7,8,9,7,False
+shortage_cost_per_unit,1.0,Chronos2_Covariates | point_forecast,Chronos_Bolt | quantile_forecast,7,10,9,8,False
+shortage_cost_per_unit,1.0,Chronos2_History | point_forecast,Chronos_Bolt | quantile_forecast,9,10,10,8,False
+shortage_cost_per_unit,4.0,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+shortage_cost_per_unit,4.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
+shortage_cost_per_unit,4.0,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
+shortage_cost_per_unit,4.0,Chronos_Bolt | point_forecast,Chronos_Bolt | quantile_forecast,11,10,10,11,False

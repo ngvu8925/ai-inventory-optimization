@@ -1,0 +1,4 @@
+model,n_rows,n_q10_gt_q50,n_q50_gt_q90,n_q90_gt_q95,share_q90_equal_q95,coverage_q50,coverage_q90,coverage_q95,mean_actual,mean_forecast,mean_bias_forecast_minus_actual,max_abs_actual_vs_daily
+Chronos2_History,21840,16,0,0,0.0,0.6404,0.9067,0.949,2.4467,1.8416,-0.6052,0.0
+Chronos2_Covariates,21840,8,0,0,0.0,0.6404,0.9008,0.9464,2.4467,1.8396,-0.6072,0.0
+Chronos_Bolt,21840,292,0,0,1.0,0.6243,0.8937,0.8937,2.4467,1.7267,-0.7201,0.0

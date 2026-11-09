@@ -1,0 +1,7 @@
+variant,window,sigma_source,q_basis,update_frequency,differences_vs_baseline,ma_forecast_recomputed_matches_file
+baseline,91,window_91,window_91,origin_only (giống Baseline),không có,True
+forecast_ma91_sigma91_q91,91,window_91,window_91,origin_only (giống Baseline),không có,True
+forecast_ma91_sigma_history_q91,91,full_history,window_91,origin_only (giống Baseline),σ lấy toàn bộ lịch sử (Baseline σ 91 ngày),True
+forecast_ma28_sigma91_q28,28,window_91,window_28,origin_only (giống Baseline),cửa sổ dự báo 28 ngày (Baseline 91); Q dùng d̄ 28 ngày (Baseline d̄ 91 ngày),True
+forecast_ma28_sigma28_q28,28,window_28,window_28,origin_only (giống Baseline),cửa sổ dự báo 28 ngày (Baseline 91); σ lấy cửa sổ 28 ngày (Baseline σ 91 ngày); Q dùng d̄ 28 ngày (Baseline d̄ 91 ngày),True
+forecast_ma28_sigma_history_q28,28,full_history,window_28,origin_only (giống Baseline),cửa sổ dự báo 28 ngày (Baseline 91); σ lấy toàn bộ lịch sử (Baseline σ 91 ngày); Q dùng d̄ 28 ngày (Baseline d̄ 91 ngày),True

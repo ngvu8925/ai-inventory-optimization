@@ -162,3 +162,28 @@ chưa được nhóm duyệt**; ma trận độ nhạy trong
 `results/inventory/sensitivity_matrix.csv` chạy cả A/B/C.
 
 Toàn bộ giá trị chi phí và vận hành là **giả định tạm, chưa được nhóm duyệt**.
+
+---
+
+## 5. Ma trận độ nhạy (một tham số)
+
+Script `src/inventory/sensitivity.py` chạy kịch bản `normal`, mỗi lần chỉ đổi MỘT
+tham số quanh mức cơ sở (h = B, p = 2, K = 5, service level = 0,95):
+
+| Tham số | Các mức đã chạy |
+|---|---|
+| `holding_cost_per_unit_per_day` | 0,001355 / 0,002032 / 0,002709 |
+| `shortage_cost_per_unit` | 1,0 / 2,0 / 4,0 |
+| `ordering_cost` | 2,5 / 5,0 / 10,0 |
+| `service_level` | 0,90 / 0,95 / 0,99 |
+
+Đầu ra (mỗi cấu hình 11 chính sách, kèm hạng theo `cost_total`):
+
+- `results/inventory/sensitivity_matrix.csv` — toàn bộ 132 dòng.
+- `results/inventory/sensitivity_rankings.csv` — bảng xếp hạng gọn.
+- `results/inventory/sensitivity_inversions.csv` — các cặp đảo hạng so với cơ sở.
+- `results/inventory/sensitivity_matrix.md` — bảng markdown.
+
+`Oracle` luôn đứng hạng 1 nhưng chỉ là **cận dưới chi phí**, không phải mô hình.
+Các cặp đảo hạng chỉ nằm giữa các chính sách thật (không liên quan Oracle).
+

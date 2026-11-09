@@ -1,0 +1,7 @@
+model,policy,num_orders,mean_avg_inventory,mean_rop_used,mean_order_qty_used,fill_rate_pooled,total_short,cost_total
+Chronos2_Covariates,point_forecast,2735,17.962,25.7513,26.4375,0.8728,6797.72,28067.52
+Chronos2_Covariates,quantile_forecast,2486,16.2299,20.2177,26.4375,0.8609,7431.04,28012.33
+Chronos2_History,point_forecast,2727,17.5494,25.4555,26.0599,0.8647,7232.67,28879.1
+Chronos2_History,quantile_forecast,2483,16.0032,19.9198,26.0599,0.8556,7716.94,28559.08
+Chronos_Bolt,point_forecast,2767,17.0376,25.3169,25.1408,0.8574,7617.95,29827.08
+Chronos_Bolt,quantile_forecast,2476,15.6333,19.933,25.1408,0.8476,8146.47,29366.75

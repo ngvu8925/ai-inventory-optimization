@@ -1,0 +1,4 @@
+model,n_sku_fold,mean_sum_forecast_lead,mean_sum_q50_lead,mean_sigma_hist_sqrtL,mean_sigma_lead_from_q10_q90,z_service,mean_ss_point,mean_ss_quantile,mean_rop_point_formula,mean_rop_quantile_formula,mean_rop_point_minus_quantile,mean_q_point,mean_q_quantile,mean_q_point_minus_quantile
+Chronos2_History,780,12.6609,12.6609,7.7785,4.413,1.6449,12.7945,7.2588,25.4555,19.9198,5.5357,26.0599,26.0599,0.0
+Chronos2_Covariates,780,12.9568,12.9568,7.7785,4.4143,1.6449,12.7945,7.2609,25.7513,20.2177,5.5336,26.4375,26.4375,0.0
+Chronos_Bolt,780,12.5224,12.5224,7.7785,4.5053,1.6449,12.7945,7.4106,25.3169,19.933,5.3839,25.1408,25.1408,0.0
