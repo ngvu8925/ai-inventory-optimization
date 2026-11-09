@@ -6,7 +6,15 @@ mô phỏng theo ngày, và xuất bảng kết quả vào results/inventory/.
 Cấu trúc nguồn chạy:
   - Baseline / Baseline_full_history: chạy MỘT LẦN, không phụ thuộc mô hình.
   - Mỗi mô hình dự báo (LightGBM, MovingAverage, 3 biến thể Chronos):
-    chạy point_forecast, và quantile_forecast nếu có q_0.1/q_0.9.
+      * 3 biến thể point_forecast (tách nguồn sigma):
+          - point_forecast                    : σ toàn bộ lịch sử
+          - point_forecast_window_sigma       : σ cửa sổ Baseline (91 ngày)
+          - point_forecast_error_sigma        : σ từ sai số các fold trước origin
+      * 2 biến thể quantile (nếu mô hình thực sự có q0.1/q0.9/q0.95):
+          - quantile_forecast                 : σ từ khoảng q0.1–q0.9
+          - quantile_forecast_history_sigma   : σ toàn bộ lịch sử
+    Chronos-Bolt bị đánh dấu "không khả dụng" cho chính sách quantile vì
+    q0.95 của nó chỉ là bản sao của q0.9, không phải phân vị mô hình xuất ra.
 
 Chạy: python src/inventory/run_simulation.py [--stress none|demand_spike|lead_time_extended]
 """
@@ -31,6 +39,7 @@ from src.inventory.policies import (
     compute_policy_params,
     load_assumptions,
 )
+from src.inventory.prediction_prep import prepare_model_predictions
 from src.inventory.simulator import run_simulation_for_item
 
 
@@ -54,8 +63,29 @@ BASELINE_SOURCES = [
 # Tên hiển thị ghi rõ để không bị đọc nhầm là một mô hình.
 ORACLE_SOURCE = ("Oracle (lower bound, not a model)", "oracle_reference")
 
-POLICIES_POINT = ["point_forecast"]
-POLICIES_QUANTILE = ["point_forecast", "quantile_forecast"]
+# 3 biến thể point: tách phần do ROP (vị trí) khỏi phần do nguồn sigma.
+POLICIES_POINT = [
+    "point_forecast",                 # σ toàn bộ lịch sử (chính sách cũ)
+    "point_forecast_window_sigma",    # (a) σ cửa sổ Baseline 91 ngày
+    "point_forecast_error_sigma",     # (b) σ sai số dự báo các fold trước origin
+]
+# 2 biến thể quantile; chỉ chạy khi mô hình thực sự xuất q0.1/q0.9/q0.95.
+POLICIES_QUANTILE_EXTRA = [
+    "quantile_forecast",                 # σ từ khoảng q0.1–q0.9 (chính sách cũ)
+    "quantile_forecast_history_sigma",   # (c) σ toàn bộ lịch sử
+]
+
+# Nhãn mô tả nguồn sigma để ghi kèm kết quả, tránh đọc nhầm các biến thể.
+POLICY_META = {
+    "baseline": ("window_91", "Baseline: d̄, σ, Q đều từ cửa sổ 91 ngày"),
+    "baseline_full_history": ("full_history", "Baseline dùng toàn bộ lịch sử"),
+    "point_forecast": ("full_history", "Point forecast, σ toàn bộ lịch sử"),
+    "point_forecast_window_sigma": ("window_91", "Point forecast, σ cửa sổ 91 ngày"),
+    "point_forecast_error_sigma": ("forecast_error", "Point forecast, σ sai số các fold trước"),
+    "quantile_forecast": ("q10_q90", "Quantile forecast, σ từ q0.1–q0.9"),
+    "quantile_forecast_history_sigma": ("full_history", "Quantile forecast, σ toàn bộ lịch sử"),
+    "oracle_reference": ("perfect_foresight", "Oracle: nhu cầu thực tương lai, không phải mô hình"),
+}
 
 
 def load_forecast(model_name: str, pred_path: str) -> pd.DataFrame:
@@ -125,9 +155,21 @@ def run_all_simulations(
     all_records = []
     scenario_label = stress_scenario if stress_scenario != "none" else "normal"
 
-    def _run_source(display_model: str, policy_name: str, forecast_df: pd.DataFrame | None) -> None:
+    def _run_source(
+        display_model: str,
+        policy_name: str,
+        forecast_df: pd.DataFrame | None,
+        error_sigma_df: pd.DataFrame | None = None,
+    ) -> None:
         """Chạy 1 nguồn (baseline hoặc model) cho toàn bộ fold × SKU."""
         print(f"\n--- Nguồn: {display_model} | Chính sách: {policy_name} ---")
+        sigma_lookup = {}
+        if error_sigma_df is not None and len(error_sigma_df) > 0:
+            sigma_lookup = {
+                (int(r["fold"]), str(r["item_id"])): float(r["sigma_error"])
+                for _, r in error_sigma_df.iterrows()
+            }
+
         for fold_k in range(num_folds):
             origin_day = initial_origin + fold_k * step_size
 
@@ -173,6 +215,7 @@ def run_all_simulations(
                     rop_value, qty_value = 0.0, 0.0
                     dynamic_rop, dynamic_qty = rop_path, qty_path
                 else:
+                    sigma_error = sigma_lookup.get((fold_k, item_id))
                     try:
                         params = compute_policy_params(
                             item_id=item_id,
@@ -181,6 +224,7 @@ def run_all_simulations(
                             forecast_df=fold_fc,
                             policy_name=policy_name,
                             cfg=cfg,
+                            sigma_error=sigma_error,
                         )
                     except (ValueError, KeyError) as e:
                         print(f"    [WARN] {display_model}/{policy_name}/fold{fold_k}/{item_id}: {e}")
@@ -214,18 +258,40 @@ def run_all_simulations(
         _run_source(display_name, policy_name, forecast_df=None)
 
     # 2) Các mô hình dự báo
+    availability_rows = []
+    rearrangement_rows = []
+    error_sigma_frames = []
+    baseline_window = int(cfg.get("baseline_window_days", 91))
+
     for model_name, pred_path in MODEL_FILES.items():
         try:
-            forecast_df = load_forecast(model_name, pred_path)
+            raw_forecast_df = load_forecast(model_name, pred_path)
         except FileNotFoundError:
             print(f"  [SKIP] {model_name}: file dự báo không tồn tại.")
             continue
 
-        has_quantile = {"q_0.1", "q_0.9"}.issubset(forecast_df.columns)
-        policies = POLICIES_QUANTILE if has_quantile else POLICIES_POINT
+        forecast_df, availability, error_sigma_df, rearr_stats = prepare_model_predictions(
+            model_name=model_name,
+            pred_df=raw_forecast_df,
+            daily_df=daily_df,
+            bt_cfg=backtest_cfg,
+            baseline_window_days=baseline_window,
+        )
+        availability_rows.append(availability)
+        rearrangement_rows.append({"model": model_name, **rearr_stats})
+        error_sigma_frames.append(error_sigma_df)
+
+        policies = list(POLICIES_POINT)
+        if availability["quantile_policy_available"]:
+            policies += POLICIES_QUANTILE_EXTRA
+        else:
+            print(
+                f"  [KHÔNG KHẢ DỤNG] {model_name}: bỏ chính sách quantile — "
+                f"{availability['reason']}."
+            )
 
         for policy_name in policies:
-            _run_source(model_name, policy_name, forecast_df)
+            _run_source(model_name, policy_name, forecast_df, error_sigma_df)
 
     # 3) Oracle: tham chiếu cận dưới chi phí (perfect foresight), không phải mô hình
     _run_source(ORACLE_SOURCE[0], ORACLE_SOURCE[1], forecast_df=None)
@@ -238,6 +304,27 @@ def run_all_simulations(
     summary = _summarize_results(results_df)
     if not write_outputs:
         return results_df
+
+    # Metadata của bước chuẩn bị dự báo: khả dụng phân vị, sắp xếp lại,
+    # sigma sai số, và định nghĩa nguồn sigma của từng chính sách.
+    if availability_rows:
+        pd.DataFrame(availability_rows).to_csv(
+            Path(out_dir) / "quantile_availability.csv", index=False
+        )
+    if rearrangement_rows:
+        pd.DataFrame(rearrangement_rows).to_csv(
+            Path(out_dir) / "quantile_rearrangement.csv", index=False
+        )
+    if error_sigma_frames:
+        pd.concat(error_sigma_frames, ignore_index=True).to_csv(
+            Path(out_dir) / "forecast_error_sigma.csv", index=False
+        )
+    pd.DataFrame(
+        [
+            {"policy": policy, "sigma_source": meta[0], "description": meta[1]}
+            for policy, meta in POLICY_META.items()
+        ]
+    ).to_csv(Path(out_dir) / "policy_metadata.csv", index=False)
 
     # Lưu kết quả chi tiết theo từng SKU và fold
     detail_path = Path(out_dir) / f"simulation_detail_{scenario_label}.csv"

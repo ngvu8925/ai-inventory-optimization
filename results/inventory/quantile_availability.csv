@@ -1,0 +1,6 @@
+model,has_q_0.1,has_q_0.5,has_q_0.9,has_q_0.95,share_q90_equal_q95,quantile_policy_available,reason
+MovingAverage,False,False,False,False,,False,không có cột q_0.1/q_0.9
+LightGBM,False,False,False,False,,False,không có cột q_0.1/q_0.9
+Chronos2_History,True,True,True,True,0.0,True,có q_0.1/q_0.9 và q_0.95 không phải bản sao
+Chronos2_Covariates,True,True,True,True,4.6e-05,True,có q_0.1/q_0.9 và q_0.95 không phải bản sao
+Chronos_Bolt,True,True,True,True,1.0,False,q_0.95 là bản sao của q_0.9 (mô hình không xuất q_0.95)

@@ -1,0 +1,9 @@
+policy,sigma_source,description
+baseline,window_91,"Baseline: d̄, σ, Q đều từ cửa sổ 91 ngày"
+baseline_full_history,full_history,Baseline dùng toàn bộ lịch sử
+point_forecast,full_history,"Point forecast, σ toàn bộ lịch sử"
+point_forecast_window_sigma,window_91,"Point forecast, σ cửa sổ 91 ngày"
+point_forecast_error_sigma,forecast_error,"Point forecast, σ sai số các fold trước"
+quantile_forecast,q10_q90,"Quantile forecast, σ từ q0.1–q0.9"
+quantile_forecast_history_sigma,full_history,"Quantile forecast, σ toàn bộ lịch sử"
+oracle_reference,perfect_foresight,"Oracle: nhu cầu thực tương lai, không phải mô hình"

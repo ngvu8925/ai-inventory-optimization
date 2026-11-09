@@ -1,133 +1,265 @@
-parameter,parameter_label,value,base_value,is_base_config,model,policy,rank_cost,cost_total,fill_rate_pooled,total_short
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,"Oracle (lower bound, not a model)",oracle_reference,1,12635.75,0.9488,2738.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Baseline_full_history,baseline_full_history,2,18769.03,0.9335,3555.14
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Baseline,baseline,3,18790.74,0.9307,3704.57
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,LightGBM,point_forecast,4,20552.45,0.9194,4308.16
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,MovingAverage,point_forecast,5,22978.02,0.899,5395.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos2_Covariates,quantile_forecast,6,27772.36,0.8609,7431.04
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos2_Covariates,point_forecast,7,27801.94,0.8728,6797.72
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos2_History,quantile_forecast,8,28322.46,0.8556,7716.94
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos2_History,point_forecast,9,28619.62,0.8647,7232.67
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos_Bolt,quantile_forecast,10,29135.6,0.8476,8146.47
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.001355,0.002032,False,Chronos_Bolt,point_forecast,11,29575.17,0.8574,7617.95
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Baseline,baseline,2,19131.28,0.9307,3704.57
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Baseline_full_history,baseline_full_history,3,19183.06,0.9335,3555.14
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,MovingAverage,point_forecast,5,23334.27,0.899,5395.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos2_Covariates,quantile_forecast,6,28012.33,0.8609,7431.04
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos2_Covariates,point_forecast,7,28067.52,0.8728,6797.72
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos2_History,quantile_forecast,8,28559.08,0.8556,7716.94
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos2_History,point_forecast,9,28879.1,0.8647,7232.67
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos_Bolt,quantile_forecast,10,29366.75,0.8476,8146.47
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002032,0.002032,True,Chronos_Bolt,point_forecast,11,29827.08,0.8574,7617.95
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,"Oracle (lower bound, not a model)",oracle_reference,1,13055.18,0.9488,2738.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Baseline,baseline,2,19471.82,0.9307,3704.57
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Baseline_full_history,baseline_full_history,3,19597.09,0.9335,3555.14
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,LightGBM,point_forecast,4,21218.1,0.9194,4308.16
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,MovingAverage,point_forecast,5,23690.52,0.899,5395.0
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos2_Covariates,quantile_forecast,6,28252.3,0.8609,7431.04
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos2_Covariates,point_forecast,7,28333.11,0.8728,6797.72
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos2_History,quantile_forecast,8,28795.69,0.8556,7716.94
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos2_History,point_forecast,9,29138.58,0.8647,7232.67
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos_Bolt,quantile_forecast,10,29597.9,0.8476,8146.47
-holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),0.002709,0.002032,False,Chronos_Bolt,point_forecast,11,30079.0,0.8574,7617.95
-ordering_cost,ordering_cost (K),2.5,5.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,9475.47,0.9488,2738.0
-ordering_cost,ordering_cost (K),2.5,5.0,False,Baseline_full_history,baseline_full_history,2,13768.06,0.9335,3555.14
-ordering_cost,ordering_cost (K),2.5,5.0,False,Baseline,baseline,3,13781.28,0.9307,3704.57
-ordering_cost,ordering_cost (K),2.5,5.0,False,LightGBM,point_forecast,4,15250.27,0.9194,4308.16
-ordering_cost,ordering_cost (K),2.5,5.0,False,MovingAverage,point_forecast,5,17596.77,0.899,5395.0
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos2_Covariates,point_forecast,6,21230.02,0.8728,6797.72
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos2_Covariates,quantile_forecast,7,21797.33,0.8609,7431.04
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos2_History,point_forecast,8,22061.6,0.8647,7232.67
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos2_History,quantile_forecast,9,22351.58,0.8556,7716.94
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos_Bolt,point_forecast,10,22909.58,0.8574,7617.95
-ordering_cost,ordering_cost (K),2.5,5.0,False,Chronos_Bolt,quantile_forecast,11,23176.75,0.8476,8146.47
-ordering_cost,ordering_cost (K),5.0,5.0,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-ordering_cost,ordering_cost (K),5.0,5.0,True,Baseline,baseline,2,19131.28,0.9307,3704.57
-ordering_cost,ordering_cost (K),5.0,5.0,True,Baseline_full_history,baseline_full_history,3,19183.06,0.9335,3555.14
-ordering_cost,ordering_cost (K),5.0,5.0,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16
-ordering_cost,ordering_cost (K),5.0,5.0,True,MovingAverage,point_forecast,5,23334.27,0.899,5395.0
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos2_Covariates,quantile_forecast,6,28012.33,0.8609,7431.04
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos2_Covariates,point_forecast,7,28067.52,0.8728,6797.72
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos2_History,quantile_forecast,8,28559.08,0.8556,7716.94
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos2_History,point_forecast,9,28879.1,0.8647,7232.67
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos_Bolt,quantile_forecast,10,29366.75,0.8476,8146.47
-ordering_cost,ordering_cost (K),5.0,5.0,True,Chronos_Bolt,point_forecast,11,29827.08,0.8574,7617.95
-ordering_cost,ordering_cost (K),10.0,5.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,19585.47,0.9488,2738.0
-ordering_cost,ordering_cost (K),10.0,5.0,False,Baseline,baseline,2,29831.28,0.9307,3704.57
-ordering_cost,ordering_cost (K),10.0,5.0,False,Baseline_full_history,baseline_full_history,3,30013.06,0.9335,3555.14
-ordering_cost,ordering_cost (K),10.0,5.0,False,LightGBM,point_forecast,4,32155.27,0.9194,4308.16
-ordering_cost,ordering_cost (K),10.0,5.0,False,MovingAverage,point_forecast,5,34809.27,0.899,5395.0
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos2_Covariates,quantile_forecast,6,40442.33,0.8609,7431.04
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos2_History,quantile_forecast,7,40974.08,0.8556,7716.94
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos2_Covariates,point_forecast,8,41742.52,0.8728,6797.72
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos_Bolt,quantile_forecast,9,41746.75,0.8476,8146.47
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos2_History,point_forecast,10,42514.1,0.8647,7232.67
-ordering_cost,ordering_cost (K),10.0,5.0,False,Chronos_Bolt,point_forecast,11,43662.08,0.8574,7617.95
-service_level,service_level,0.9,0.95,False,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-service_level,service_level,0.9,0.95,False,Baseline,baseline,2,19137.68,0.9264,3933.75
-service_level,service_level,0.9,0.95,False,Baseline_full_history,baseline_full_history,3,19298.55,0.927,3901.41
-service_level,service_level,0.9,0.95,False,LightGBM,point_forecast,4,20939.82,0.913,4646.94
-service_level,service_level,0.9,0.95,False,MovingAverage,point_forecast,5,22801.99,0.8974,5481.75
-service_level,service_level,0.9,0.95,False,Chronos2_Covariates,point_forecast,6,28095.99,0.8668,7118.16
-service_level,service_level,0.9,0.95,False,Chronos2_Covariates,quantile_forecast,7,28433.06,0.8532,7844.95
-service_level,service_level,0.9,0.95,False,Chronos2_History,point_forecast,8,29068.11,0.8574,7621.56
-service_level,service_level,0.9,0.95,False,Chronos2_History,quantile_forecast,9,29123.61,0.8468,8188.58
-service_level,service_level,0.9,0.95,False,Chronos_Bolt,quantile_forecast,10,29946.75,0.8383,8641.2
-service_level,service_level,0.9,0.95,False,Chronos_Bolt,point_forecast,11,30300.4,0.8472,8162.69
-service_level,service_level,0.95,0.95,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-service_level,service_level,0.95,0.95,True,Baseline,baseline,2,19131.28,0.9307,3704.57
-service_level,service_level,0.95,0.95,True,Baseline_full_history,baseline_full_history,3,19183.06,0.9335,3555.14
-service_level,service_level,0.95,0.95,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16
-service_level,service_level,0.95,0.95,True,MovingAverage,point_forecast,5,23334.27,0.899,5395.0
-service_level,service_level,0.95,0.95,True,Chronos2_Covariates,quantile_forecast,6,28012.33,0.8609,7431.04
-service_level,service_level,0.95,0.95,True,Chronos2_Covariates,point_forecast,7,28067.52,0.8728,6797.72
-service_level,service_level,0.95,0.95,True,Chronos2_History,quantile_forecast,8,28559.08,0.8556,7716.94
-service_level,service_level,0.95,0.95,True,Chronos2_History,point_forecast,9,28879.1,0.8647,7232.67
-service_level,service_level,0.95,0.95,True,Chronos_Bolt,quantile_forecast,10,29366.75,0.8476,8146.47
-service_level,service_level,0.95,0.95,True,Chronos_Bolt,point_forecast,11,29827.08,0.8574,7617.95
-service_level,service_level,0.99,0.95,False,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-service_level,service_level,0.99,0.95,False,Baseline_full_history,baseline_full_history,2,19549.74,0.9381,3309.97
-service_level,service_level,0.99,0.95,False,Baseline,baseline,3,19611.4,0.9343,3512.3
-service_level,service_level,0.99,0.95,False,LightGBM,point_forecast,4,20917.94,0.9261,3947.5
-service_level,service_level,0.99,0.95,False,MovingAverage,point_forecast,5,23450.92,0.9042,5117.75
-service_level,service_level,0.99,0.95,False,Chronos2_Covariates,quantile_forecast,6,27547.56,0.8702,6934.89
-service_level,service_level,0.99,0.95,False,Chronos2_Covariates,point_forecast,7,27963.25,0.879,6466.56
-service_level,service_level,0.99,0.95,False,Chronos2_History,quantile_forecast,8,28269.77,0.8636,7286.78
-service_level,service_level,0.99,0.95,False,Chronos2_History,point_forecast,9,28863.92,0.8707,6907.33
-service_level,service_level,0.99,0.95,False,Chronos_Bolt,quantile_forecast,10,29235.36,0.8546,7770.3
-service_level,service_level,0.99,0.95,False,Chronos_Bolt,point_forecast,11,29788.1,0.8635,7296.78
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,10107.47,0.9488,2738.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Baseline,baseline,2,15426.7,0.9307,3704.57
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Baseline_full_history,baseline_full_history,3,15627.88,0.9335,3555.14
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,LightGBM,point_forecast,4,16577.11,0.9194,4308.16
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,MovingAverage,point_forecast,5,17939.27,0.899,5395.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos2_Covariates,quantile_forecast,6,20581.3,0.8609,7431.04
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos2_History,quantile_forecast,7,20842.14,0.8556,7716.94
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos_Bolt,quantile_forecast,8,21220.27,0.8476,8146.47
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos2_Covariates,point_forecast,9,21269.83,0.8728,6797.72
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos2_History,point_forecast,10,21646.46,0.8647,7232.67
-shortage_cost_per_unit,shortage_cost_per_unit (p),1.0,2.0,False,Chronos_Bolt,point_forecast,11,22209.1,0.8574,7617.95
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Baseline,baseline,2,19131.28,0.9307,3704.57
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Baseline_full_history,baseline_full_history,3,19183.06,0.9335,3555.14
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,MovingAverage,point_forecast,5,23334.27,0.899,5395.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos2_Covariates,quantile_forecast,6,28012.33,0.8609,7431.04
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos2_Covariates,point_forecast,7,28067.52,0.8728,6797.72
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos2_History,quantile_forecast,8,28559.08,0.8556,7716.94
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos2_History,point_forecast,9,28879.1,0.8647,7232.67
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos_Bolt,quantile_forecast,10,29366.75,0.8476,8146.47
-shortage_cost_per_unit,shortage_cost_per_unit (p),2.0,2.0,True,Chronos_Bolt,point_forecast,11,29827.08,0.8574,7617.95
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,18321.47,0.9488,2738.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Baseline_full_history,baseline_full_history,2,26293.43,0.9335,3555.14
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Baseline,baseline,3,26540.43,0.9307,3704.57
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,LightGBM,point_forecast,4,29501.59,0.9194,4308.16
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,MovingAverage,point_forecast,5,34124.27,0.899,5395.0
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos2_Covariates,point_forecast,6,41662.92,0.8728,6797.72
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos2_Covariates,quantile_forecast,7,42874.39,0.8609,7431.04
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos2_History,point_forecast,8,43344.39,0.8647,7232.67
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos2_History,quantile_forecast,9,43992.95,0.8556,7716.94
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos_Bolt,point_forecast,10,45063.06,0.8574,7617.95
-shortage_cost_per_unit,shortage_cost_per_unit (p),4.0,2.0,False,Chronos_Bolt,quantile_forecast,11,45659.7,0.8476,8146.47
+parameter,parameter_label,sensitivity_type,value,base_value,is_base_config,model,policy,rank_cost,cost_total,fill_rate_pooled,total_short,num_orders,run_seconds
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,"Oracle (lower bound, not a model)",oracle_reference,1,12635.75,0.9488,2738.0,1348,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Baseline_full_history,baseline_full_history,2,18768.95,0.9335,3555.14,2166,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Baseline,baseline,3,18790.73,0.9307,3704.57,2140,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,LightGBM,point_forecast,4,20552.45,0.9194,4308.16,2254,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,LightGBM,point_forecast_window_sigma,5,20739.36,0.9116,4724.49,2131,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,LightGBM,point_forecast_error_sigma,6,20956.87,0.9105,4783.45,2153,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,MovingAverage,point_forecast_error_sigma,7,22593.58,0.8975,5474.75,2190,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,MovingAverage,point_forecast_window_sigma,8,22634.4,0.8961,5550.5,2169,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,MovingAverage,point_forecast,9,22978.02,0.899,5395.0,2295,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_Covariates,point_forecast_window_sigma,10,27714.77,0.8681,7048.66,2622,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_Covariates,quantile_forecast,11,27772.37,0.8609,7431.04,2486,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_Covariates,point_forecast,12,27801.99,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_Covariates,quantile_forecast_history_sigma,12,27801.99,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_Covariates,point_forecast_error_sigma,14,28045.7,0.8655,7185.28,2636,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_History,quantile_forecast,15,28322.45,0.8556,7716.93,2483,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_History,point_forecast_window_sigma,16,28464.09,0.8607,7441.47,2616,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_History,point_forecast,17,28619.66,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_History,quantile_forecast_history_sigma,17,28619.66,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos2_History,point_forecast_error_sigma,19,28619.94,0.8599,7488.68,2631,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos_Bolt,point_forecast,20,29575.1,0.8574,7617.95,2767,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos_Bolt,point_forecast_window_sigma,21,29653.03,0.8517,7927.24,2663,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.001355,0.002032,False,Chronos_Bolt,point_forecast_error_sigma,22,29790.08,0.851,7959.48,2679,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Baseline,baseline,2,19131.27,0.9307,3704.57,2140,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Baseline_full_history,baseline_full_history,3,19182.97,0.9335,3555.14,2166,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16,2254,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,LightGBM,point_forecast_window_sigma,5,21056.82,0.9116,4724.49,2131,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,LightGBM,point_forecast_error_sigma,6,21269.12,0.9105,4783.45,2153,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,MovingAverage,point_forecast_error_sigma,7,22940.36,0.8975,5474.75,2190,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,MovingAverage,point_forecast_window_sigma,8,22978.34,0.8961,5550.5,2169,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,MovingAverage,point_forecast,9,23334.27,0.899,5395.0,2295,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_Covariates,point_forecast_window_sigma,10,27968.3,0.8681,7048.66,2622,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_Covariates,quantile_forecast,11,28012.34,0.8609,7431.04,2486,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_Covariates,point_forecast,12,28067.57,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_Covariates,quantile_forecast_history_sigma,12,28067.57,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_Covariates,point_forecast_error_sigma,14,28293.08,0.8655,7185.28,2636,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_History,quantile_forecast,15,28559.06,0.8556,7716.93,2483,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_History,point_forecast_window_sigma,16,28714.47,0.8607,7441.47,2616,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_History,point_forecast_error_sigma,17,28863.54,0.8599,7488.68,2631,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_History,point_forecast,18,28879.14,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos2_History,quantile_forecast_history_sigma,18,28879.14,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos_Bolt,point_forecast,20,29827.01,0.8574,7617.95,2767,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos_Bolt,point_forecast_window_sigma,21,29894.63,0.8517,7927.24,2663,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002032,0.002032,True,Chronos_Bolt,point_forecast_error_sigma,22,30027.97,0.851,7959.48,2679,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,"Oracle (lower bound, not a model)",oracle_reference,1,13055.18,0.9488,2738.0,1348,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Baseline,baseline,2,19471.81,0.9307,3704.57,2140,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Baseline_full_history,baseline_full_history,3,19597.0,0.9335,3555.14,2166,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,LightGBM,point_forecast,4,21218.09,0.9194,4308.16,2254,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,LightGBM,point_forecast_window_sigma,5,21374.28,0.9116,4724.49,2131,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,LightGBM,point_forecast_error_sigma,6,21581.37,0.9105,4783.45,2153,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,MovingAverage,point_forecast_error_sigma,7,23287.14,0.8975,5474.75,2190,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,MovingAverage,point_forecast_window_sigma,8,23322.29,0.8961,5550.5,2169,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,MovingAverage,point_forecast,9,23690.52,0.899,5395.0,2295,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_Covariates,point_forecast_window_sigma,10,28221.84,0.8681,7048.66,2622,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_Covariates,quantile_forecast,11,28252.31,0.8609,7431.04,2486,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_Covariates,point_forecast,12,28333.15,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_Covariates,quantile_forecast_history_sigma,12,28333.15,0.8728,6797.72,2735,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_Covariates,point_forecast_error_sigma,14,28540.47,0.8655,7185.28,2636,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_History,quantile_forecast,15,28795.68,0.8556,7716.93,2483,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_History,point_forecast_window_sigma,16,28964.86,0.8607,7441.47,2616,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_History,point_forecast_error_sigma,17,29107.15,0.8599,7488.68,2631,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_History,point_forecast,18,29138.62,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos2_History,quantile_forecast_history_sigma,18,29138.62,0.8647,7232.66,2727,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos_Bolt,point_forecast,20,30078.92,0.8574,7617.95,2767,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos_Bolt,point_forecast_window_sigma,21,30136.23,0.8517,7927.24,2663,0.0
+holding_cost_per_unit_per_day,holding_cost_per_unit_per_day (h),cost accounting (no behavior change),0.002709,0.002032,False,Chronos_Bolt,point_forecast_error_sigma,22,30265.86,0.851,7959.48,2679,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,9475.47,0.9488,2738.0,1348,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Baseline_full_history,baseline_full_history,2,13767.97,0.9335,3555.14,2166,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Baseline,baseline,3,13781.27,0.9307,3704.57,2140,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,LightGBM,point_forecast,4,15250.27,0.9194,4308.16,2254,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,LightGBM,point_forecast_window_sigma,5,15729.32,0.9116,4724.49,2131,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,LightGBM,point_forecast_error_sigma,6,15886.62,0.9105,4783.45,2153,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,MovingAverage,point_forecast_error_sigma,7,17465.36,0.8975,5474.75,2190,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,MovingAverage,point_forecast_window_sigma,8,17555.84,0.8961,5550.5,2169,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,MovingAverage,point_forecast,9,17596.77,0.899,5395.0,2295,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_Covariates,point_forecast,10,21230.07,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_Covariates,quantile_forecast_history_sigma,10,21230.07,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_Covariates,point_forecast_window_sigma,12,21413.3,0.8681,7048.66,2622,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_Covariates,point_forecast_error_sigma,13,21703.08,0.8655,7185.28,2636,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_Covariates,quantile_forecast,14,21797.34,0.8609,7431.04,2486,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_History,point_forecast,15,22061.64,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_History,quantile_forecast_history_sigma,15,22061.64,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_History,point_forecast_window_sigma,17,22174.47,0.8607,7441.47,2616,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_History,point_forecast_error_sigma,18,22286.04,0.8599,7488.68,2631,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos2_History,quantile_forecast,19,22351.56,0.8556,7716.93,2483,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos_Bolt,point_forecast,20,22909.51,0.8574,7617.95,2767,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos_Bolt,point_forecast_window_sigma,21,23237.13,0.8517,7927.24,2663,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),2.5,5.0,False,Chronos_Bolt,point_forecast_error_sigma,22,23330.47,0.851,7959.48,2679,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Baseline,baseline,2,19131.27,0.9307,3704.57,2140,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Baseline_full_history,baseline_full_history,3,19182.97,0.9335,3555.14,2166,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16,2254,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,LightGBM,point_forecast_window_sigma,5,21056.82,0.9116,4724.49,2131,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,LightGBM,point_forecast_error_sigma,6,21269.12,0.9105,4783.45,2153,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,MovingAverage,point_forecast_error_sigma,7,22940.36,0.8975,5474.75,2190,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,MovingAverage,point_forecast_window_sigma,8,22978.34,0.8961,5550.5,2169,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,MovingAverage,point_forecast,9,23334.27,0.899,5395.0,2295,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_Covariates,point_forecast_window_sigma,10,27968.3,0.8681,7048.66,2622,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_Covariates,quantile_forecast,11,28012.34,0.8609,7431.04,2486,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_Covariates,point_forecast,12,28067.57,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_Covariates,quantile_forecast_history_sigma,12,28067.57,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_Covariates,point_forecast_error_sigma,14,28293.08,0.8655,7185.28,2636,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_History,quantile_forecast,15,28559.06,0.8556,7716.93,2483,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_History,point_forecast_window_sigma,16,28714.47,0.8607,7441.47,2616,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_History,point_forecast_error_sigma,17,28863.54,0.8599,7488.68,2631,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_History,point_forecast,18,28879.14,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos2_History,quantile_forecast_history_sigma,18,28879.14,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos_Bolt,point_forecast,20,29827.01,0.8574,7617.95,2767,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos_Bolt,point_forecast_window_sigma,21,29894.63,0.8517,7927.24,2663,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),5.0,5.0,True,Chronos_Bolt,point_forecast_error_sigma,22,30027.97,0.851,7959.48,2679,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,19585.47,0.9488,2738.0,1348,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Baseline,baseline,2,29831.27,0.9307,3704.57,2140,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Baseline_full_history,baseline_full_history,3,30012.97,0.9335,3555.14,2166,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,LightGBM,point_forecast_window_sigma,4,31711.82,0.9116,4724.49,2131,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,LightGBM,point_forecast_error_sigma,5,32034.12,0.9105,4783.45,2153,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,LightGBM,point_forecast,6,32155.27,0.9194,4308.16,2254,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,MovingAverage,point_forecast_window_sigma,7,33823.34,0.8961,5550.5,2169,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,MovingAverage,point_forecast_error_sigma,8,33890.36,0.8975,5474.75,2190,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,MovingAverage,point_forecast,9,34809.27,0.899,5395.0,2295,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_Covariates,quantile_forecast,10,40442.34,0.8609,7431.04,2486,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_History,quantile_forecast,11,40974.06,0.8556,7716.93,2483,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_Covariates,point_forecast_window_sigma,12,41078.3,0.8681,7048.66,2622,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_Covariates,point_forecast_error_sigma,13,41473.08,0.8655,7185.28,2636,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_Covariates,point_forecast,14,41742.57,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_Covariates,quantile_forecast_history_sigma,14,41742.57,0.8728,6797.72,2735,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_History,point_forecast_window_sigma,16,41794.47,0.8607,7441.47,2616,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_History,point_forecast_error_sigma,17,42018.54,0.8599,7488.68,2631,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_History,point_forecast,18,42514.14,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos2_History,quantile_forecast_history_sigma,18,42514.14,0.8647,7232.66,2727,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos_Bolt,point_forecast_window_sigma,20,43209.63,0.8517,7927.24,2663,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos_Bolt,point_forecast_error_sigma,21,43422.97,0.851,7959.48,2679,0.0
+ordering_cost,ordering_cost (K),cost accounting (no behavior change),10.0,5.0,False,Chronos_Bolt,point_forecast,22,43662.01,0.8574,7617.95,2767,0.0
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Baseline,baseline,2,19137.68,0.9264,3933.75,2060,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Baseline_full_history,baseline_full_history,3,19298.55,0.927,3901.41,2064,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,LightGBM,point_forecast,4,20939.82,0.913,4646.94,2141,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,LightGBM,point_forecast_window_sigma,5,21011.06,0.9069,4975.06,2031,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,LightGBM,point_forecast_error_sigma,6,21313.97,0.9047,5093.52,2046,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,MovingAverage,point_forecast_error_sigma,7,22745.92,0.895,5610.0,2106,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,MovingAverage,point_forecast_window_sigma,8,22765.91,0.8934,5695.0,2078,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,MovingAverage,point_forecast,9,22801.99,0.8974,5481.75,2164,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_Covariates,point_forecast_window_sigma,10,28075.81,0.8625,7348.95,2530,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_Covariates,point_forecast,11,28095.99,0.8668,7118.16,2621,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_Covariates,quantile_forecast_history_sigma,11,28095.99,0.8668,7118.16,2621,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_Covariates,quantile_forecast,13,28433.06,0.8532,7844.95,2410,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_Covariates,point_forecast_error_sigma,14,28456.12,0.8598,7491.42,2552,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_History,point_forecast_window_sigma,15,28815.16,0.8556,7715.89,2534,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_History,point_forecast,16,29068.1,0.8574,7621.55,2617,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_History,quantile_forecast_history_sigma,16,29068.1,0.8574,7621.55,2617,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_History,point_forecast_error_sigma,18,29090.31,0.8536,7825.68,2548,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos2_History,quantile_forecast,19,29123.6,0.8468,8188.58,2413,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos_Bolt,point_forecast_window_sigma,20,29818.07,0.8477,8140.32,2570,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos_Bolt,point_forecast_error_sigma,21,30023.03,0.8468,8187.18,2594,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.9,0.95,False,Chronos_Bolt,point_forecast,22,30300.4,0.8472,8162.69,2652,98.45
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Baseline,baseline,2,19131.28,0.9307,3704.57,2140,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Baseline_full_history,baseline_full_history,3,19183.06,0.9335,3555.14,2166,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16,2254,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,LightGBM,point_forecast_window_sigma,5,21056.86,0.9116,4724.49,2131,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,LightGBM,point_forecast_error_sigma,6,21269.15,0.9105,4783.45,2153,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,MovingAverage,point_forecast_error_sigma,7,22940.36,0.8975,5474.75,2190,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,MovingAverage,point_forecast_window_sigma,8,22978.34,0.8961,5550.5,2169,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,MovingAverage,point_forecast,9,23334.27,0.899,5395.0,2295,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_Covariates,point_forecast_window_sigma,10,27968.26,0.8681,7048.66,2622,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_Covariates,quantile_forecast,11,28012.33,0.8609,7431.04,2486,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_Covariates,point_forecast,12,28067.52,0.8728,6797.72,2735,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_Covariates,quantile_forecast_history_sigma,12,28067.52,0.8728,6797.72,2735,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_Covariates,point_forecast_error_sigma,14,28293.05,0.8655,7185.28,2636,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_History,quantile_forecast,15,28559.06,0.8556,7716.93,2483,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_History,point_forecast_window_sigma,16,28714.44,0.8607,7441.47,2616,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_History,point_forecast_error_sigma,17,28863.57,0.8599,7488.68,2631,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_History,point_forecast,18,28879.09,0.8647,7232.66,2727,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos2_History,quantile_forecast_history_sigma,18,28879.09,0.8647,7232.66,2727,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos_Bolt,point_forecast,20,29827.08,0.8574,7617.95,2767,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos_Bolt,point_forecast_window_sigma,21,29894.7,0.8517,7927.24,2663,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.95,0.95,True,Chronos_Bolt,point_forecast_error_sigma,22,30028.05,0.851,7959.48,2679,96.98
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Baseline_full_history,baseline_full_history,2,19549.74,0.9381,3309.97,2310,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Baseline,baseline,3,19611.4,0.9343,3512.3,2294,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,LightGBM,point_forecast,4,20917.94,0.9261,3947.5,2381,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,LightGBM,point_forecast_window_sigma,5,21189.7,0.9179,4387.24,2275,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,LightGBM,point_forecast_error_sigma,6,21262.78,0.9181,4378.52,2298,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,MovingAverage,point_forecast_window_sigma,7,23394.97,0.8993,5383.5,2303,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,MovingAverage,point_forecast,8,23450.92,0.9042,5117.75,2406,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,MovingAverage,point_forecast_error_sigma,9,23467.67,0.9001,5337.5,2333,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_Covariates,quantile_forecast,10,27547.56,0.8702,6934.89,2580,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_Covariates,point_forecast_window_sigma,11,27932.07,0.8741,6727.36,2732,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_Covariates,point_forecast,12,27963.25,0.879,6466.56,2830,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_Covariates,quantile_forecast_history_sigma,12,27963.25,0.879,6466.56,2830,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_Covariates,point_forecast_error_sigma,14,28153.6,0.8729,6794.0,2753,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_History,quantile_forecast,15,28269.76,0.8636,7286.77,2587,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_History,point_forecast_window_sigma,16,28849.37,0.8656,7183.08,2736,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_History,point_forecast,17,28863.91,0.8707,6907.32,2835,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_History,quantile_forecast_history_sigma,17,28863.91,0.8707,6907.32,2835,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos2_History,point_forecast_error_sigma,19,28871.57,0.8658,7171.77,2749,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos_Bolt,point_forecast,20,29788.1,0.8635,7296.78,2871,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos_Bolt,point_forecast_window_sigma,21,29958.62,0.8569,7646.5,2780,146.62
+service_level,service_level,behavior change (ROP/SS/Q),0.99,0.95,False,Chronos_Bolt,point_forecast_error_sigma,22,30005.52,0.8568,7650.35,2790,146.62
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,10107.47,0.9488,2738.0,1348,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Baseline,baseline,2,15426.7,0.9307,3704.57,2140,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Baseline_full_history,baseline_full_history,3,15627.83,0.9335,3555.14,2166,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,LightGBM,point_forecast_window_sigma,4,16332.33,0.9116,4724.49,2131,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,LightGBM,point_forecast_error_sigma,5,16485.67,0.9105,4783.45,2153,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,LightGBM,point_forecast,6,16577.11,0.9194,4308.16,2254,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,MovingAverage,point_forecast_window_sigma,7,17427.84,0.8961,5550.5,2169,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,MovingAverage,point_forecast_error_sigma,8,17465.61,0.8975,5474.75,2190,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,MovingAverage,point_forecast,9,17939.27,0.899,5395.0,2295,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_Covariates,quantile_forecast,10,20581.3,0.8609,7431.04,2486,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_History,quantile_forecast,11,20842.13,0.8556,7716.93,2483,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_Covariates,point_forecast_window_sigma,12,20919.64,0.8681,7048.66,2622,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_Covariates,point_forecast_error_sigma,13,21107.8,0.8655,7185.28,2636,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_Covariates,point_forecast,14,21269.85,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_Covariates,quantile_forecast_history_sigma,14,21269.85,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_History,point_forecast_window_sigma,16,21273.0,0.8607,7441.47,2616,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_History,point_forecast_error_sigma,17,21374.86,0.8599,7488.68,2631,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_History,point_forecast,18,21646.48,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos2_History,quantile_forecast_history_sigma,18,21646.48,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos_Bolt,point_forecast_window_sigma,20,21967.39,0.8517,7927.24,2663,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos_Bolt,point_forecast_error_sigma,21,22068.49,0.851,7959.48,2679,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),1.0,2.0,False,Chronos_Bolt,point_forecast,22,22209.06,0.8574,7617.95,2767,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,"Oracle (lower bound, not a model)",oracle_reference,1,12845.47,0.9488,2738.0,1348,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Baseline,baseline,2,19131.27,0.9307,3704.57,2140,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Baseline_full_history,baseline_full_history,3,19182.97,0.9335,3555.14,2166,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,LightGBM,point_forecast,4,20885.27,0.9194,4308.16,2254,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,LightGBM,point_forecast_window_sigma,5,21056.82,0.9116,4724.49,2131,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,LightGBM,point_forecast_error_sigma,6,21269.12,0.9105,4783.45,2153,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,MovingAverage,point_forecast_error_sigma,7,22940.36,0.8975,5474.75,2190,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,MovingAverage,point_forecast_window_sigma,8,22978.34,0.8961,5550.5,2169,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,MovingAverage,point_forecast,9,23334.27,0.899,5395.0,2295,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_Covariates,point_forecast_window_sigma,10,27968.3,0.8681,7048.66,2622,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_Covariates,quantile_forecast,11,28012.34,0.8609,7431.04,2486,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_Covariates,point_forecast,12,28067.57,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_Covariates,quantile_forecast_history_sigma,12,28067.57,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_Covariates,point_forecast_error_sigma,14,28293.08,0.8655,7185.28,2636,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_History,quantile_forecast,15,28559.06,0.8556,7716.93,2483,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_History,point_forecast_window_sigma,16,28714.47,0.8607,7441.47,2616,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_History,point_forecast_error_sigma,17,28863.54,0.8599,7488.68,2631,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_History,point_forecast,18,28879.14,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos2_History,quantile_forecast_history_sigma,18,28879.14,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos_Bolt,point_forecast,20,29827.01,0.8574,7617.95,2767,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos_Bolt,point_forecast_window_sigma,21,29894.63,0.8517,7927.24,2663,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),2.0,2.0,True,Chronos_Bolt,point_forecast_error_sigma,22,30027.97,0.851,7959.48,2679,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,"Oracle (lower bound, not a model)",oracle_reference,1,18321.47,0.9488,2738.0,1348,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Baseline_full_history,baseline_full_history,2,26293.25,0.9335,3555.14,2166,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Baseline,baseline,3,26540.41,0.9307,3704.57,2140,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,LightGBM,point_forecast,4,29501.59,0.9194,4308.16,2254,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,LightGBM,point_forecast_window_sigma,5,30505.8,0.9116,4724.49,2131,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,LightGBM,point_forecast_error_sigma,6,30836.02,0.9105,4783.45,2153,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,MovingAverage,point_forecast_error_sigma,7,33889.86,0.8975,5474.75,2190,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,MovingAverage,point_forecast_window_sigma,8,34079.34,0.8961,5550.5,2169,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,MovingAverage,point_forecast,9,34124.27,0.899,5395.0,2295,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_Covariates,point_forecast,10,41663.01,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_Covariates,quantile_forecast_history_sigma,10,41663.01,0.8728,6797.72,2735,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_Covariates,point_forecast_window_sigma,12,42065.62,0.8681,7048.66,2622,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_Covariates,point_forecast_error_sigma,13,42663.64,0.8655,7185.28,2636,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_Covariates,quantile_forecast,14,42874.42,0.8609,7431.04,2486,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_History,point_forecast,15,43344.46,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_History,quantile_forecast_history_sigma,15,43344.46,0.8647,7232.66,2727,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_History,point_forecast_window_sigma,17,43597.41,0.8607,7441.47,2616,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_History,point_forecast_error_sigma,18,43840.9,0.8599,7488.68,2631,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos2_History,quantile_forecast,19,43992.92,0.8556,7716.93,2483,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos_Bolt,point_forecast,20,45062.91,0.8574,7617.95,2767,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos_Bolt,point_forecast_window_sigma,21,45749.11,0.8517,7927.24,2663,0.0
+shortage_cost_per_unit,shortage_cost_per_unit (p),cost accounting (no behavior change),4.0,2.0,False,Chronos_Bolt,point_forecast_error_sigma,22,45946.93,0.851,7959.48,2679,0.0

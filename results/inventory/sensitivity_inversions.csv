@@ -1,18 +1,72 @@
-parameter,value,policy_a,policy_b,base_rank_a,base_rank_b,new_rank_a,new_rank_b,involves_oracle
-holding_cost_per_unit_per_day,0.001355,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
-ordering_cost,2.5,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
-ordering_cost,2.5,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
-ordering_cost,2.5,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
-ordering_cost,2.5,Chronos_Bolt | point_forecast,Chronos_Bolt | quantile_forecast,11,10,10,11,False
-ordering_cost,10.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,7,8,8,7,False
-ordering_cost,10.0,Chronos2_History | point_forecast,Chronos_Bolt | quantile_forecast,9,10,10,9,False
-service_level,0.9,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
-service_level,0.9,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
-service_level,0.99,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
-shortage_cost_per_unit,1.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,7,8,9,7,False
-shortage_cost_per_unit,1.0,Chronos2_Covariates | point_forecast,Chronos_Bolt | quantile_forecast,7,10,9,8,False
-shortage_cost_per_unit,1.0,Chronos2_History | point_forecast,Chronos_Bolt | quantile_forecast,9,10,10,8,False
-shortage_cost_per_unit,4.0,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
-shortage_cost_per_unit,4.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,7,6,6,7,False
-shortage_cost_per_unit,4.0,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,9,8,8,9,False
-shortage_cost_per_unit,4.0,Chronos_Bolt | point_forecast,Chronos_Bolt | quantile_forecast,11,10,10,11,False
+parameter,sensitivity_type,value,policy_a,policy_b,base_rank_a,base_rank_b,new_rank_a,new_rank_b,involves_oracle
+holding_cost_per_unit_per_day,cost accounting (no behavior change),0.001355,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+holding_cost_per_unit_per_day,cost accounting (no behavior change),0.001355,Chronos2_History | point_forecast,Chronos2_History | point_forecast_error_sigma,18,17,17,19,False
+holding_cost_per_unit_per_day,cost accounting (no behavior change),0.001355,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast_history_sigma,17,18,19,17,False
+ordering_cost,cost accounting (no behavior change),2.5,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_Covariates | point_forecast,Chronos2_Covariates | point_forecast_window_sigma,12,10,10,12,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,12,11,10,14,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_Covariates | quantile_forecast,14,11,13,14,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_Covariates | quantile_forecast_history_sigma,10,12,12,10,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_Covariates | quantile_forecast,Chronos2_Covariates | quantile_forecast_history_sigma,11,12,14,10,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast,Chronos2_History | point_forecast_error_sigma,18,17,15,18,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast,Chronos2_History | point_forecast_window_sigma,18,16,15,17,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,18,15,15,19,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast,17,15,18,19,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast_history_sigma,17,18,18,15,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast_window_sigma,Chronos2_History | quantile_forecast,16,15,17,19,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | point_forecast_window_sigma,Chronos2_History | quantile_forecast_history_sigma,16,18,17,15,False
+ordering_cost,cost accounting (no behavior change),2.5,Chronos2_History | quantile_forecast,Chronos2_History | quantile_forecast_history_sigma,15,18,19,15,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | point_forecast_error_sigma,12,14,14,13,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,12,15,14,11,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_Covariates | quantile_forecast_history_sigma,14,12,13,14,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_History | quantile_forecast,14,15,13,11,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_Covariates | quantile_forecast,10,11,12,10,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_History | quantile_forecast,10,15,12,11,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos2_Covariates | quantile_forecast_history_sigma,Chronos2_History | quantile_forecast,12,15,14,11,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_error_sigma,20,22,22,21,False
+ordering_cost,cost accounting (no behavior change),10.0,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_window_sigma,20,21,22,20,False
+ordering_cost,cost accounting (no behavior change),10.0,LightGBM | point_forecast,LightGBM | point_forecast_error_sigma,4,6,6,5,False
+ordering_cost,cost accounting (no behavior change),10.0,LightGBM | point_forecast,LightGBM | point_forecast_window_sigma,4,5,6,4,False
+ordering_cost,cost accounting (no behavior change),10.0,MovingAverage | point_forecast_error_sigma,MovingAverage | point_forecast_window_sigma,7,8,8,7,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,12,11,11,13,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_Covariates | quantile_forecast,Chronos2_Covariates | quantile_forecast_history_sigma,11,12,13,11,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | point_forecast,Chronos2_History | point_forecast_error_sigma,18,17,16,18,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,18,15,16,19,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast,17,15,18,19,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast_history_sigma,17,18,18,16,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | point_forecast_window_sigma,Chronos2_History | quantile_forecast,16,15,15,19,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos2_History | quantile_forecast,Chronos2_History | quantile_forecast_history_sigma,15,18,19,16,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_error_sigma,20,22,22,21,False
+service_level,behavior change (ROP/SS/Q),0.9,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_window_sigma,20,21,22,20,False
+service_level,behavior change (ROP/SS/Q),0.99,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+service_level,behavior change (ROP/SS/Q),0.99,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_Covariates | quantile_forecast,10,11,11,10,False
+service_level,behavior change (ROP/SS/Q),0.99,Chronos2_History | point_forecast,Chronos2_History | point_forecast_error_sigma,18,17,17,19,False
+service_level,behavior change (ROP/SS/Q),0.99,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast_history_sigma,17,18,19,17,False
+service_level,behavior change (ROP/SS/Q),0.99,MovingAverage | point_forecast,MovingAverage | point_forecast_error_sigma,9,7,8,9,False
+service_level,behavior change (ROP/SS/Q),0.99,MovingAverage | point_forecast_error_sigma,MovingAverage | point_forecast_window_sigma,7,8,9,7,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | point_forecast_error_sigma,12,14,14,13,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast,Chronos2_History | quantile_forecast,12,15,14,11,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_Covariates | quantile_forecast_history_sigma,14,12,13,14,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_History | quantile_forecast,14,15,13,11,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_Covariates | quantile_forecast,10,11,12,10,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_History | quantile_forecast,10,15,12,11,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos2_Covariates | quantile_forecast_history_sigma,Chronos2_History | quantile_forecast,12,15,14,11,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_error_sigma,20,22,22,21,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,Chronos_Bolt | point_forecast,Chronos_Bolt | point_forecast_window_sigma,20,21,22,20,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,LightGBM | point_forecast,LightGBM | point_forecast_error_sigma,4,6,6,5,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,LightGBM | point_forecast,LightGBM | point_forecast_window_sigma,4,5,6,4,False
+shortage_cost_per_unit,cost accounting (no behavior change),1.0,MovingAverage | point_forecast_error_sigma,MovingAverage | point_forecast_window_sigma,7,8,8,7,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Baseline | baseline,Baseline_full_history | baseline_full_history,2,3,3,2,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | point_forecast_window_sigma,12,10,10,12,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_Covariates | point_forecast,Chronos2_Covariates | quantile_forecast,12,11,10,14,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_Covariates | point_forecast_error_sigma,Chronos2_Covariates | quantile_forecast,14,11,13,14,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_Covariates | point_forecast_window_sigma,Chronos2_Covariates | quantile_forecast_history_sigma,10,12,12,10,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_Covariates | quantile_forecast,Chronos2_Covariates | quantile_forecast_history_sigma,11,12,14,10,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast,Chronos2_History | point_forecast_error_sigma,18,17,15,18,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast,Chronos2_History | point_forecast_window_sigma,18,16,15,17,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast,Chronos2_History | quantile_forecast,18,15,15,19,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast,17,15,18,19,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast_error_sigma,Chronos2_History | quantile_forecast_history_sigma,17,18,18,15,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast_window_sigma,Chronos2_History | quantile_forecast,16,15,17,19,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | point_forecast_window_sigma,Chronos2_History | quantile_forecast_history_sigma,16,18,17,15,False
+shortage_cost_per_unit,cost accounting (no behavior change),4.0,Chronos2_History | quantile_forecast,Chronos2_History | quantile_forecast_history_sigma,15,18,19,15,False

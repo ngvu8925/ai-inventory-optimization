@@ -1,0 +1,6 @@
+model,n_rows_total,n_quantile_columns,n_rows_rearranged,n_cells_changed,forecast_changed_rows,n_q_0.1_gt_q_0.5_before,n_q_0.5_gt_q_0.9_before,n_q_0.9_gt_q_0.95_before,n_q_0.1_gt_q_0.5_after,n_q_0.5_gt_q_0.9_after,n_q_0.9_gt_q_0.95_after
+MovingAverage,21840,0,0,0,0,0,0,0,,,
+LightGBM,21840,0,0,0,0,0,0,0,,,
+Chronos2_History,21840,4,16,32,16,16,0,0,0.0,0.0,0.0
+Chronos2_Covariates,21840,4,8,16,8,8,0,0,0.0,0.0,0.0
+Chronos_Bolt,21840,4,292,584,292,292,0,0,0.0,0.0,0.0

@@ -9,6 +9,11 @@ Các chính sách được so sánh:
   4. 'quantile_forecast'    : ROP là phân vị của TỔNG nhu cầu trong lead time,
                               xấp xỉ bằng phân phối chuẩn của tổng các ngày.
 
+Các biến thể tách nguồn sigma (thêm sau chẩn đoán, không đổi 4 chính sách gốc):
+  5. 'point_forecast_window_sigma'    : point_forecast, σ cửa sổ Baseline (91 ngày).
+  6. 'point_forecast_error_sigma'     : point_forecast, σ từ sai số các fold trước.
+  7. 'quantile_forecast_history_sigma': μ/Q từ q_0.5, σ toàn bộ lịch sử.
+
 Công thức chung (theo thuyết minh AGENTS.md):
   ROP = d_bar * L + SS
   SS  = z * sigma_d * sqrt(L)   (baseline & point_forecast)
@@ -323,6 +328,140 @@ def policy_quantile_forecast(
     }
 
 
+# =========================================================
+# Các biến thể nguồn sigma (Phase 5 hậu chẩn đoán)
+#
+# Mục đích: tách phần chênh lệch do ROP (vị trí) khỏi phần do nguồn sigma.
+# Các hàm dưới đây KHÔNG thay đổi hành vi của 4 chính sách gốc; chúng chỉ
+# được dùng cho các nhãn chính sách mới trong run_simulation.py.
+# =========================================================
+
+
+def _point_policy_with_sigma(
+    forecast_values: np.ndarray,
+    sigma_d: float,
+    cfg: dict,
+) -> Dict[str, float]:
+    """Helper: point policy với sigma ngày cho trước.
+
+    Công thức giữ nguyên như policy_point_forecast:
+      ROP = mean(forecast[0:L]) * L + z * sigma_d * sqrt(L)
+      Q   = tổng forecast[0:q_days] (hoặc mean * q_days nếu thiếu)
+    """
+    L = int(cfg["lead_time_days"])
+    z = z_from_service_level(cfg["service_level"])
+
+    fc = np.asarray(forecast_values, dtype=float)
+    if len(fc) == 0:
+        raise ValueError("Không có giá trị dự báo")
+
+    sigma = float(sigma_d)
+    if not np.isfinite(sigma) or sigma < 0:
+        raise ValueError("sigma_d phải là số hữu hạn >= 0")
+
+    d_bar = float(np.mean(fc[:L]))
+    ss = calc_safety_stock_normal(sigma, L, z)
+    rop = calc_rop(d_bar, L, ss)
+    order_qty = calc_order_qty(fc, cfg)
+
+    return {
+        "d_bar": round(d_bar, 4),
+        "sigma_d": round(sigma, 4),
+        "safety_stock": round(ss, 4),
+        "rop": round(rop, 4),
+        "order_qty": round(order_qty, 4),
+    }
+
+
+def policy_point_forecast_window_sigma(
+    forecast_values: np.ndarray,
+    history_sales: np.ndarray,
+    cfg: dict,
+    window_days: Optional[int] = None,
+) -> Dict[str, float]:
+    """Biến thể (a): point_forecast nhưng sigma lấy từ cửa sổ `window_days`.
+
+    Dùng cùng cửa sổ với Baseline (mặc định `baseline_window_days`, 91 ngày)
+    để đo riêng ảnh hưởng của nguồn sigma. d_bar và Q vẫn lấy từ forecast.
+    """
+    if window_days is None:
+        window_days = int(cfg.get("baseline_window_days", 91))
+
+    hist = _recent_window(history_sales, window_days)
+    if len(hist) == 0:
+        raise ValueError("Không có lịch sử bán hàng")
+    sigma_d = float(np.std(hist, ddof=1)) if len(hist) > 1 else 0.0
+
+    out = _point_policy_with_sigma(forecast_values, sigma_d, cfg)
+    out["window_days_used"] = int(window_days)
+    out["sigma_source"] = "window"
+    return out
+
+
+def policy_point_forecast_error_sigma(
+    forecast_values: np.ndarray,
+    cfg: dict,
+    sigma_error: Optional[float],
+) -> Dict[str, float]:
+    """Biến thể (b): point_forecast nhưng sigma lấy từ sai số dự báo.
+
+    `sigma_error` là độ lệch chuẩn của sai số ngày (actual - forecast) đã
+    quan sát ở các fold TRƯỚC origin. Việc ước lượng được thực hiện bên
+    ngoài (xem prediction_prep.compute_error_sigmas) để hàm này thuần túy.
+    """
+    if sigma_error is None:
+        raise ValueError("sigma_error không được None")
+    out = _point_policy_with_sigma(forecast_values, sigma_error, cfg)
+    out["sigma_source"] = "forecast_error"
+    return out
+
+
+def policy_quantile_forecast_sigma(
+    forecast_values: np.ndarray,
+    quantile_10: np.ndarray,
+    quantile_90: np.ndarray,
+    cfg: dict,
+    sigma_d: float,
+) -> Dict[str, float]:
+    """Biến thể (c): quantile_forecast nhưng SS dùng sigma ngày cho trước.
+
+    μ_L và Q vẫn lấy từ q_0.5 (forecast). SS = z * sigma_d * sqrt(L), tức
+    dùng cùng nguồn sigma với point_forecast. Khi sigma_d = std(lịch sử)
+    thì ROP của biến thể này trùng ROP point_forecast (nếu forecast == q_0.5).
+    """
+    L = int(cfg["lead_time_days"])
+    z = z_from_service_level(cfg["service_level"])
+
+    mu = np.maximum(np.asarray(forecast_values, dtype=float), 0.0)
+    q10 = np.maximum(np.asarray(quantile_10, dtype=float), 0.0)
+    q90 = np.maximum(np.asarray(quantile_90, dtype=float), 0.0)
+    if not (len(mu) == len(q10) == len(q90)):
+        raise ValueError("forecast, q_0.1 và q_0.9 phải cùng độ dài")
+    if len(mu) == 0:
+        raise ValueError("Không có giá trị dự báo")
+    if q10.size == 0 or q90.size == 0:
+        raise ValueError("Không có giá trị phân vị")
+
+    sigma = float(sigma_d)
+    if not np.isfinite(sigma) or sigma < 0:
+        raise ValueError("sigma_d phải là số hữu hạn >= 0")
+
+    mu_lead = float(np.sum(mu[:L]))
+    ss = z * sigma * np.sqrt(L)
+    rop = mu_lead + ss
+    order_qty = calc_order_qty(mu, cfg)
+
+    return {
+        "d_bar": round(mu_lead / L, 4),
+        "sigma_d": round(sigma, 4),
+        "sigma_lead_time": round(sigma * np.sqrt(L), 4),
+        "safety_stock": round(float(ss), 4),
+        "rop": round(float(max(rop, 0.0)), 4),
+        "order_qty": round(order_qty, 4),
+        "method": "quantile_mu_with_given_sigma",
+    }
+
+
 def build_oracle_paths(
     actual_demand: np.ndarray,
     lead_time_days: int,
@@ -379,6 +518,7 @@ def compute_policy_params(
     forecast_df: Optional[pd.DataFrame],
     policy_name: str,
     cfg: dict,
+    sigma_error: Optional[float] = None,
 ) -> Dict[str, float]:
     """Helper tổng hợp: tính tham số chính sách cho 1 SKU và 1 fold.
 
@@ -387,12 +527,21 @@ def compute_policy_params(
         fold: Số fold backtest (0..12).
         history_df: DataFrame lịch sử với cột ['item_id', 'sales'], ≤ origin.
         forecast_df: DataFrame dự báo của fold (None với baseline).
-        policy_name: 'baseline', 'baseline_full_history', 'point_forecast',
-            hoặc 'quantile_forecast'.
+        policy_name: Một trong các tên chính sách bên dưới.
         cfg: Dict cấu hình từ assumptions.yaml.
+        sigma_error: Sigma ngày từ sai số dự báo của các fold trước origin
+            (bắt buộc với 'point_forecast_error_sigma').
 
     Returns:
         Dict tham số chính sách.
+
+    Các chính sách:
+        - baseline, baseline_full_history
+        - point_forecast: σ toàn bộ lịch sử
+        - point_forecast_window_sigma: σ cửa sổ baseline (91 ngày)
+        - point_forecast_error_sigma: σ từ sai số dự báo các fold trước
+        - quantile_forecast: σ từ khoảng q0.1–q0.9
+        - quantile_forecast_history_sigma: μ từ q0.5, σ toàn bộ lịch sử
     """
     hist = history_df[history_df["item_id"] == item_id]["sales"].values.astype(float)
     if len(hist) == 0:
@@ -416,19 +565,33 @@ def compute_policy_params(
     if policy_name == "point_forecast":
         return policy_point_forecast(fc_vals, hist, cfg)
 
-    if policy_name == "quantile_forecast":
+    if policy_name == "point_forecast_window_sigma":
+        return policy_point_forecast_window_sigma(fc_vals, hist, cfg)
+
+    if policy_name == "point_forecast_error_sigma":
+        return policy_point_forecast_error_sigma(fc_vals, cfg, sigma_error)
+
+    if policy_name in ("quantile_forecast", "quantile_forecast_history_sigma"):
         missing = [c for c in ("q_0.1", "q_0.9") if c not in fc_item.columns]
         if missing:
             raise ValueError(
-                f"Thiếu cột {missing} — quantile_forecast chỉ áp dụng cho mô hình "
+                f"Thiếu cột {missing} — {policy_name} chỉ áp dụng cho mô hình "
                 f"có phân vị q_0.1 và q_0.9."
             )
         q10 = fc_item["q_0.1"].values.astype(float)
         q90 = fc_item["q_0.9"].values.astype(float)
-        return policy_quantile_forecast(fc_vals, q10, q90, cfg)
+        if policy_name == "quantile_forecast":
+            return policy_quantile_forecast(fc_vals, q10, q90, cfg)
+
+        # Biến thể (c): mu_L và Q từ q0.5, SS dùng sigma lịch sử toàn phần.
+        sigma_hist = float(np.std(hist, ddof=1)) if len(hist) > 1 else 0.0
+        return policy_quantile_forecast_sigma(
+            fc_vals, q10, q90, cfg, sigma_d=sigma_hist
+        )
 
     raise ValueError(
         f"Tên chính sách không hợp lệ: '{policy_name}'. "
         f"Chọn: 'baseline', 'baseline_full_history', 'point_forecast', "
-        f"'quantile_forecast'."
+        f"'point_forecast_window_sigma', 'point_forecast_error_sigma', "
+        f"'quantile_forecast', 'quantile_forecast_history_sigma'."
     )
